@@ -61,3 +61,40 @@ async def async_client(override_get_db):
 #     response = await async_client.post("/api/token", data=login_data)
 #     token = response.json()["access_token"]
 #     return {"Authorization": f"Bearer {token}"}
+
+
+
+
+# import pytest
+# from fastapi import FastAPI
+# from fastapi.testclient import TestClient
+# from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
+# from sqlalchemy.orm import sessionmaker
+
+# from app.main import app
+# from app.dependencies import get_db_session, get_station_service
+# from app.services.station_service import StationService
+# from app.repositories.station_repository import StationRepository
+
+# # Тестовые зависимости
+# async def override_get_db_session():
+#     """Тестовая сессия базы данных"""
+#     test_engine = create_async_engine("sqlite+aiosqlite:///:memory:")
+#     TestingSessionLocal = sessionmaker(test_engine, class_=AsyncSession, expire_on_commit=False)
+    
+#     async with TestingSessionLocal() as session:
+#         yield session
+
+# async def override_get_station_service(db: AsyncSession = Depends(override_get_db_session)):
+#     """Тестовый сервис станций"""
+#     return StationService(StationRepository())
+
+# # Переопределение зависимостей для тестов
+# app.dependency_overrides[get_db_session] = override_get_db_session
+# app.dependency_overrides[get_station_service] = override_get_station_service
+
+# @pytest.fixture
+# def test_client():
+#     """Тестовый клиент FastAPI"""
+#     with TestClient(app) as client:
+#         yield client

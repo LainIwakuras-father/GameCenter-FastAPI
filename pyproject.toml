@@ -1,7 +1,7 @@
 [project]
 name = "gamecenter-fastapi"
 version = "0.1.0"
-description = "Add your description here"
+description = "gamecenter for SpbSUT meetup"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [

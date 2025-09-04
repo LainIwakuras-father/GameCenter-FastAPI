@@ -54,6 +54,16 @@ async def logout_user(response: Response):
     return {"message": "Пользователь успешно вышел из системы"}
 
 
-@router.get("/me", response_model=UserSchema)
-async def get_me(user: UserSchema = Depends(get_current_user)):
-    return user
+
+
+@router.get("/api/token")
+async def get_token():
+    pass
+
+@router.get("/api/token/refresh")
+async def refresh_token():
+    pass
+
+@router.get("/api/token/verify")
+async def verify_token():
+    pass
