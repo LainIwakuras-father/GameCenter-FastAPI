@@ -1,29 +1,20 @@
-"""class tweet"""
+
+
+
+from app.db.db import Base
 
 
 class PlayerTeam(Base):
     __tablename__ = "tweet"
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True, index=True)
-    points: Mapped[int] = mapped_column(
+    user = relationship()
+    teamname: Mapped[str] = mapped_column(String(100),nullable=True)
+    score: Mapped[int] = mapped_column(nullable=True, default=0)
+    stations: Mapped[List["StationOrder"]] = relationship()
+    current_station: Mapped[int] = mapped_column(default=1)
 
-    )
-    name: Mapped[str] = mapped_column(
-        nullable=True,
-    )
-    description: Mapped[str] = mapped_column(
-        nullable=True,
-    )
-    image: Mapped[str] = mapped_column(
-        nullable=True,
-    )
-    assignment: Mapped[str] = mapped_column(
-        nullable=True,
-    )
-    task: Mapped[str] = mapped_column(
-        
-    )
-    created_at: Mapped[datetime] = mapped_column(
-        server_default=func.now(),
-        default=datetime.now(), nullable=True
-    )
+    def __repr__(self):
+        return f"{self.teamname}"
+  
+   

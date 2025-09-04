@@ -3,7 +3,7 @@ import os
 
 e
 import uvicorn
-from api.endpoints import router
+
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware

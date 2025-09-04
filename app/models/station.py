@@ -1,29 +1,22 @@
-"""class tweet"""
+from sqlalchemy import ForeignKey, String, Text
+from sqlalchemy.orm import Mapped, mapped_column
+
+from app.db.db import Base
+
+"""class Станций"""
 
 
 class Station(Base):
-    __tablename__ = "tweet"
+    __tablename__ = "stations"
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True, index=True)
-    points: Mapped[int] = mapped_column(
-
-    )
-    name: Mapped[str] = mapped_column(
-        nullable=True,
-    )
-    description: Mapped[str] = mapped_column(
-        nullable=True,
-    )
-    image: Mapped[str] = mapped_column(
-        nullable=True,
-    )
-    assignment: Mapped[str] = mapped_column(
-        nullable=True,
-    )
-    task: Mapped[str] = mapped_column(
-        
-    )
-    created_at: Mapped[datetime] = mapped_column(
-        server_default=func.now(),
-        default=datetime.now(), nullable=True
-    )
+    time: Mapped[str] = mapped_column()
+    points: Mapped[int] = mapped_column(nullable=True)
+    name: Mapped[str] = mapped_column(String(100),nullable=True,)
+    description: Mapped[str] = mapped_column(Text,nullable=True)
+    image: Mapped[str] = mapped_column(String(255),nullable=True)
+    assignment: Mapped[str] = mapped_column(Text,nullable=True,)
+    task: Mapped[str] = mapped_column(ForeignKey("tasks.id"),nullable=True)
+  
+    def __repr__(self):
+        return f"{self.name}"
