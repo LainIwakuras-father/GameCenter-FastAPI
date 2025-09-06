@@ -11,9 +11,9 @@ class Settings(BaseSettings):
     SECRET_KEY: str
     ALGORITHM: str
 
-    # @property
-    # def DB_URL(self)->str:
-    #     return f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASSWORD}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
+    @property
+    def DB_URL(self)->str:
+        return f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASSWORD}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
 
     class Config:
         env_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".env")

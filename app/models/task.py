@@ -1,3 +1,10 @@
+from typing import Optional
+from sqlalchemy import String, Text
+from sqlalchemy.orm import Mapped, mapped_column
+
+from app.db.db import Base
+
+
 class Task(Base):
     __tablename__ = "tasks"
     

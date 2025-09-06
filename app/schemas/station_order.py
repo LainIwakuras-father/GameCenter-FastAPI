@@ -1,4 +1,8 @@
 # StationOrder schemas
+from typing import Optional
+from pydantic import BaseModel, ConfigDict
+
+
 class StationOrderBase(BaseModel):
     first_id: Optional[int] = None
     second_id: Optional[int] = None

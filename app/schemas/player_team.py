@@ -1,4 +1,11 @@
 # PlayerTeam schemas
+from datetime import datetime
+from typing import Optional
+from pydantic import BaseModel, ConfigDict
+
+from app.schemas.user import User
+
+
 class PlayerTeamBase(BaseModel):
     teamname: Optional[str] = None
     start_time: Optional[datetime] = None

@@ -1,6 +1,8 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from typing import List, Optional
+from sqlalchemy.orm import selectinload
+
 from app.models import Task
 from app.repositories.base_repository import BaseRepository
 

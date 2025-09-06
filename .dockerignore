@@ -1,0 +1,13 @@
+.venv
+.idea
+.postgres
+tests
+README.md
+**/__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+.env
+.git
+.DS_Store

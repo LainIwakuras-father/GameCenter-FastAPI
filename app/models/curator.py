@@ -1,7 +1,13 @@
 from typing import Optional
 from sqlalchemy import ForeignKey, String
+from sqlalchemy.orm import  Mapped, mapped_column, relationship
+
 from app.db.db import Base
-from sqlalchemy.orm import  Mapped, mapped_column
+from app.models.station import Station
+from app.models.user import User
+
+
+
 
 class Curator(Base):
     __tablename__ = "curators"

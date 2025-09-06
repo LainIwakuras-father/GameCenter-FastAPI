@@ -1,4 +1,8 @@
 # Task schemas
+from typing import Optional
+from pydantic import BaseModel, ConfigDict
+
+
 class TaskBase(BaseModel):
     name: Optional[str] = None
     question: Optional[str] = None

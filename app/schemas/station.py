@@ -1,4 +1,10 @@
 # Station schemas
+from datetime import timedelta
+from typing import Optional
+from pydantic import BaseModel, ConfigDict
+
+from app.schemas.task import Task
+
 class StationBase(BaseModel):
     time: Optional[timedelta] = None
     points: Optional[int] = 0

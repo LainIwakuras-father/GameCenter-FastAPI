@@ -2,7 +2,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List, Optional
 from app import schemas
 from app.repositories.curator_repository import CuratorRepository
-from app.services.base_service import BaseService
+from app.services.base_servise import BaseService
+
 
 class CuratorService(BaseService):
     def __init__(self):

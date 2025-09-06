@@ -1,12 +1,14 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from typing import List, Optional
-from app.models import Curator
-from app.repositories.base_repository import BaseRepository
+from sqlalchemy.orm import selectinload
 
-class CuratorRepository(BaseRepository):
+from app.models.curator import Curator
+from app.repositories.base_repository import SQLAlchemyRepository
+
+class CuratorRepository(SQLAlchemyRepository):
     def __init__(self):
-        super().__init__(Curator)
+        super().__init__()
     
     async def get_with_user(self, db: AsyncSession, curator_id: int) -> Optional[Curator]:
         result = await db.execute(
