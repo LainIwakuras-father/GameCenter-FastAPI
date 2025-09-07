@@ -7,7 +7,6 @@ class Settings(BaseSettings):
     # DB_USER: str
     # DB_PASSWORD: str
     # DB_HOST: str
-    # MODE: str
     SECRET_KEY: str
     ALGORITHM: str
 
