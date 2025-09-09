@@ -1,9 +1,13 @@
 from fastapi import APIRouter, HTTPException
 
-from app.schemas.curator import CuratorCreate
-from app.services import curator_service
+from app.schemas.curator import CuratorCreate, CuratorUpdate
+from app.services.curator import CuratorService
+
 
 router = APIRouter(prefix="/api/curator", tags=["curators"])
+
+#создаю экземпляр для взаимодействия с сервисом куратор
+curator_service = CuratorService()
 
 @router.get("/api/curator")
 async def get_all_curator():
@@ -21,8 +25,8 @@ async def create_curator(curator_data: CuratorCreate):
     return await curator_service.create_curator(curator_data.model_dump())
 
 @router.put("/api/curator/{id}")
-async def update_curator(id: int):
-    pass
+async def update_curator(id: int,curator_data:CuratorUpdate):
+    return await curator_service.update_curator(id=id,curator_data=curator_data)
 
 @router.delete("/api/curator/{id}")
 async def delete_curator(id: int):

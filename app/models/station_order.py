@@ -7,3 +7,4 @@ class StationOrder(models.Model):
     third = fields.ForeignKeyField("models.Station", related_name="third_orders", null=True)
     fourth = fields.ForeignKeyField("models.Station", related_name="fourth_orders", null=True)
     fifth = fields.ForeignKeyField("models.Station", related_name="fifth_orders", null=True)
+    

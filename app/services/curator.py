@@ -1,10 +1,9 @@
 from typing import List, Optional, Dict, Any
-from app.services.base import BaseService
 from app.repositories.curator import CuratorRepository
 
-class CuratorService(BaseService):
-    def __init__(self, repository: CuratorRepository = None):
-        super().__init__(repository or CuratorRepository())
+
+class CuratorService():
+    repository = CuratorRepository()
     
     async def get_all_curators(self) -> List[Any]:
         return await self.repository.get_all()

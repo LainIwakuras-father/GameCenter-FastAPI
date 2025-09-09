@@ -14,6 +14,8 @@ DB_CONFIG = {
                 "user": settings.DB_USER,
                 "password": settings.DB_PASSWORD,
                 "database": settings.DB_NAME,
+                "minsize": 1,
+                "maxsize": 10,
             }
         }
     },
@@ -53,7 +55,7 @@ async def close_db():
     await Tortoise.close_connections()
 
 
-def init_tortoise(app):
+def init_tortoisedb(app):
     """
     Инициализация Tortoise ORM для FastAPI приложения
     """
@@ -63,13 +65,3 @@ def init_tortoise(app):
         generate_schemas=settings.ENVIRONMENT == "development",
         add_exception_handlers=True,
     )
-
-
-async def get_db():
-    """
-    Dependency для получения сессии базы данных
-    """
-    try:
-        yield Tortoise.get_connection("default")
-    finally:
-        pass

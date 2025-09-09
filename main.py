@@ -1,6 +1,7 @@
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 from loguru import logger
+from tortoise import Tortoise
 import uvicorn
 
 
@@ -8,7 +9,7 @@ import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.api.all_routers import routers
-from app.db.db import close_db, init_db, init_tortoise
+from app.db.db import close_db, init_db
 
 
 
@@ -19,7 +20,7 @@ async def lifespan_app(app: FastAPI) -> AsyncGenerator[None, None]:
             # db connected
             yield
             # app teardown
-        # db connections closed
+            # db connections closed
             await close_db()
             logger.info("закрыл БД")
 
@@ -28,8 +29,7 @@ app = FastAPI(
     description="API к престоящему мероприятию",
     version="0.0.1", lifespan=lifespan_app
 )
-init_tortoise(app)
-logger.info("Иницилизация ORM")
+
 
 
 app.add_middleware(
@@ -42,6 +42,16 @@ app.add_middleware(
 
 \
 app.include_router(router=routers)
+
+
+
+@app.get("/health")
+async def health_check():
+    try:
+        await Tortoise.get_connection("default").execute_query("SELECT 1")
+        return {"status": "healthy"}
+    except Exception:
+        return {"status": "unhealthy"}, 500
 
 if __name__ == "__main__":
     logger.info("Server is running....")

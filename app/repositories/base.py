@@ -5,8 +5,9 @@ from loguru import logger
 from tortoise import Model
 
 
-class AbstractRepository(ABC):
 
+class AbstractRepository(ABC):
+    # Абстрактный азовый класс для всех  репозиториев 
     @abstractmethod
     async def create(self, data):
         raise NotImplementedError
@@ -32,8 +33,11 @@ class AbstractRepository(ABC):
 ModelType = TypeVar("ModelType", bound=Model)
 
 class BaseRepository(AbstractRepository):
+    """Базовая реализация репозитория для работы с моделями Tortoise ORM"""
+
     def __init__(self, model: Type[ModelType]):
         self.model = model
+    
 
     async def get_all(self) -> List[ModelType]:
         return await self.model.all()

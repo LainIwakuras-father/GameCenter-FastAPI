@@ -1,10 +1,8 @@
 from typing import List, Optional, Dict, Any
-from app.services.base import BaseService
 from app.repositories.player_team import PlayerTeamRepository
 
-class PlayerTeamService(BaseService):
-    def __init__(self, repository: PlayerTeamRepository = None):
-        super().__init__(repository or PlayerTeamRepository())
+class PlayerTeamService():
+    repository = PlayerTeamRepository()
     
     async def get_all_player_teams(self) -> List[Any]:
         return await self.repository.get_all()
@@ -25,10 +23,8 @@ class PlayerTeamService(BaseService):
         return await self.repository.add_score(id, score_to_add)
     
     async def get_top_3_teams(self) -> List[Any]:
-        return await self.repository.get_top_teams(limit=3)
+        return await self.repository.get_top_3_by_score(limit=3)
     
     async def set_current_station(self, id: int, station_number: int) -> Optional[Any]:
         return await self.repository.set_current_station(id, station_number)
     
-    async def create_player_team_with_user(self, user_data: Dict[str, Any], team_data: Dict[str, Any]) -> Any:
-        return await self.repository.create_with_user(user_data, team_data)

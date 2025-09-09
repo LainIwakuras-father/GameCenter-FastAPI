@@ -8,10 +8,10 @@ class PlayerTeamRepository(BaseRepository):
         super().__init__(PlayerTeam)
 
 
-    async def get_all(self) -> List[PlayerTeam]:
+    async def get_all_with_user_station(self) -> List[PlayerTeam]:
         return await PlayerTeam.all().prefetch_related("user", "stations").all()
 
-    async def get_by_id(self, id: int) -> Optional[PlayerTeam]:
+    async def get_by_id_with_user_station(self, id: int) -> Optional[PlayerTeam]:
         return await PlayerTeam.filter(id=id).prefetch_related("user", "stations").first()
 
     async def add_score(self, id: int, score_to_add: int) -> Optional[PlayerTeam]:

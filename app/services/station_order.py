@@ -1,10 +1,9 @@
 from typing import List, Optional, Dict, Any
-from app.services.base import BaseService
+
 from app.repositories.station_order import StationOrderRepository
 
-class StationOrderService(BaseService):
-    def __init__(self, repository: StationOrderRepository = None):
-        super().__init__(repository or StationOrderRepository())
+class StationOrderService():
+    repository = StationOrderRepository()
     
     async def get_all_station_orders(self, skip: int = 0, limit: int = 100) -> List[Any]:
         return await self.repository.get_all_with_relations(skip=skip, limit=limit)

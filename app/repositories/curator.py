@@ -8,10 +8,10 @@ class CuratorRepository(BaseRepository):
     def __init__(self):
         super().__init__(Curator)
 
-    async def get_all(self) -> List[Curator]:
+    async def get_all_with_user_station(self) -> List[Curator]:
         return await Curator.all().prefetch_related("user", "station").all()
 
-    async def get_by_id(self, id: int) -> Optional[Curator]:
+    async def get_by_id_with_user_station(self, id: int) -> Optional[Curator]:
         return await Curator.filter(id=id).prefetch_related("user", "station").first()
 
     async def create(self, user_data: Dict[str, Any], curator_data: Dict[str, Any]) -> Curator:

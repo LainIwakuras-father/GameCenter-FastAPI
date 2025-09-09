@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-router = APIRouter()
+router = APIRouter(tags=["playerteam"])
 
 @router.get("/api/playerteam")
 async def get_all_player_teams():

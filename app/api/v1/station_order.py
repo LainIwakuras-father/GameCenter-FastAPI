@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-router = APIRouter()
+router = APIRouter(tags=["stationorder"])
 
 @router.get("/api/stationorder")
 async def get_all_station_order():
