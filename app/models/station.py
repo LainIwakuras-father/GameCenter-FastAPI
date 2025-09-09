@@ -1,22 +1,17 @@
-from sqlalchemy import ForeignKey, String, Text
-from sqlalchemy.orm import Mapped, mapped_column
+from tortoise import models, fields
 
-from app.db.db import Base
+class Station(models.Model):
+    id = fields.IntField(pk=True)
+    time = fields.DatetimeField(null=True)
+    points = fields.IntField(null=True,default=0)
+    name = fields.CharField(max_length=100)
+    description = fields.TextField(null=True)
+    image = fields.CharField(max_length=255,null=True)
+    assignment = fields.TextField(null=True)
+    task = fields.ForeignKeyField("models.Task",null=True)
 
-"""class Станций"""
 
 
-class Station(Base):
-    __tablename__ = "stations"
 
-    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True, index=True)
-    time: Mapped[str] = mapped_column()
-    points: Mapped[int] = mapped_column(nullable=True)
-    name: Mapped[str] = mapped_column(String(100),nullable=True,)
-    description: Mapped[str] = mapped_column(Text,nullable=True)
-    image: Mapped[str] = mapped_column(String(255),nullable=True)
-    assignment: Mapped[str] = mapped_column(Text,nullable=True,)
-    task: Mapped[str] = mapped_column(ForeignKey("tasks.id"),nullable=True)
-  
-    def __repr__(self):
-        return f"{self.name}"
+
+    

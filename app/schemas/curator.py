@@ -2,23 +2,32 @@
 from typing import Optional
 from pydantic import BaseModel, ConfigDict
 
-from app.schemas.user import User
+from app.schemas.base import BaseSchema
 
 
 
-
-class CuratorBase(BaseModel):
-    station_id: Optional[int] = None
+class CuratorBase(BaseSchema):
     name: Optional[str] = None
-
+    station_id: Optional[int] = None
+    user_id: int
+    
 class CuratorCreate(CuratorBase):
-    user_id: int
+    pass
 
-class Curator(CuratorBase):
+class CuratorUpdate(CuratorBase):
+    pass
+
+class UserNested(BaseSchema):
     id: int
-    user_id: int
-    model_config = ConfigDict(from_attributes=True)
+    username: str
+    email: Optional[str] = None
 
+class StationNested(BaseSchema):
+    id: int
+    name: str
+    description: Optional[str] = None
 
-class CuratorWithUser(Curator):
-    user: User
+class CuratorWithRelations(CuratorBase):
+    id: int
+    user: Optional[UserNested] = None
+    station: Optional[StationNested] = None

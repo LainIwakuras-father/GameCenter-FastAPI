@@ -1,41 +1,75 @@
-from sqlalchemy import func
-from datetime import datetime
-from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession, AsyncAttrs
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
-
+from tortoise import Tortoise
+from tortoise.contrib.fastapi import register_tortoise
+from tortoise.backends.base.config_generator import generate_config
 from app.core.config import settings
 
+# Конфигурация подключения к базе данных
+DB_CONFIG = {
+    "connections": {
+        "default": {
+            "engine": "tortoise.backends.asyncpg",
+            "credentials": {
+                "host": settings.DB_HOST,
+                "port": settings.DB_PORT,
+                "user": settings.DB_USER,
+                "password": settings.DB_PASSWORD,
+                "database": settings.DB_NAME,
+            }
+        }
+    },
+    "apps": {
+        "models": {
+            "models": [
+                "app.models.user",
+                "app.models.station", 
+                "app.models.station_order",
+                "app.models.player_team",
+                "app.models.curator",
+                "app.models.task",
+                # "aerich.models"  # Для миграций
+            ],
+            "default_connection": "default",
+        }
+    },
+    "use_tz": False,
+    "timezone": "UTC",
+}
 
-'''
-Подключение к серверу
-'''
-DB_URL = settings.DB_URL
-engine = create_async_engine(DB_URL)
+async def init_db():
+    """
+    Инициализация подключения к базе данных
+    """
+    await Tortoise.init(config=DB_CONFIG)
+    
+    # # Генерировать схемы автоматически (только для разработки)
+    # if settings.ENVIRONMENT == "development":
+    await Tortoise.generate_schemas()
 
-'''
-Создание сессии для работы с БД
-'''
-async_session = async_sessionmaker(engine, expire_on_commit=False, class_=AsyncSession)
+
+async def close_db():
+    """
+    Закрытие подключений к базе данных
+    """
+    await Tortoise.close_connections()
+
+
+def init_tortoise(app):
+    """
+    Инициализация Tortoise ORM для FastAPI приложения
+    """
+    register_tortoise(
+        app,
+        config=DB_CONFIG,
+        generate_schemas=settings.ENVIRONMENT == "development",
+        add_exception_handlers=True,
+    )
 
 
 async def get_db():
-    async with async_session() as session:
-        yield session
-"""
-Создание моделей для БД
-"""
-class Base(AsyncAttrs, DeclarativeBase):
-    created_at: Mapped[datetime] = mapped_column(server_default=func.now())
-    updated_at: Mapped[datetime] = mapped_column(server_default=func.now(), onupdate=func.now())
-
-
-"""
-функции создания  и удаления БД
-"""
-async def create_db():
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
-
-async def drop_db():
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.drop_all)
+    """
+    Dependency для получения сессии базы данных
+    """
+    try:
+        yield Tortoise.get_connection("default")
+    finally:
+        pass

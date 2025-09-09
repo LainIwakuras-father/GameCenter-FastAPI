@@ -2,8 +2,10 @@
 from typing import Optional
 from pydantic import BaseModel, ConfigDict
 
+from app.schemas.base import BaseSchema
 
-class TaskBase(BaseModel):
+
+class TaskBase(BaseSchema):
     name: Optional[str] = None
     question: Optional[str] = None
     answer: Optional[str] = None
@@ -11,6 +13,9 @@ class TaskBase(BaseModel):
 class TaskCreate(TaskBase):
     pass
 
+class TaskUpdate(TaskBase):
+    pass
+
 class Task(TaskBase):
     id: int
-    model_config = ConfigDict(from_attributes=True)
+   

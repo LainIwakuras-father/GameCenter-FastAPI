@@ -3,6 +3,7 @@ from datetime import timedelta
 from typing import Optional
 from pydantic import BaseModel, ConfigDict
 
+from app.schemas.base import BaseSchema
 from app.schemas.task import Task
 
 class StationBase(BaseModel):
@@ -17,11 +18,17 @@ class StationBase(BaseModel):
 class StationCreate(StationBase):
     pass
 
-class Station(StationBase):
+class StationUpdate(StationBase):
+    pass
+
+
+
+# Схемы с отношениями
+class TaskNested(BaseSchema):
     id: int
-    model_config = ConfigDict(from_attributes=True)
+    name: Optional[str] = None
+    question: Optional[str] = None
 
-
-
-class StationWithTask(Station):
-    task: Optional[Task] = None
+class StationWithRelations(StationBase):
+    id: int
+    task: Optional[TaskNested] = None

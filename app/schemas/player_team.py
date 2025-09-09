@@ -3,7 +3,7 @@ from datetime import datetime
 from typing import Optional
 from pydantic import BaseModel, ConfigDict
 
-from app.schemas.user import User
+from app.schemas.base import BaseSchema
 
 
 class PlayerTeamBase(BaseModel):
@@ -12,15 +12,30 @@ class PlayerTeamBase(BaseModel):
     score: Optional[int] = 0
     stations_id: Optional[int] = None
     current_station: int = 1
+    user_id: int
 
 class PlayerTeamCreate(PlayerTeamBase):
-    user_id: int
+    pass
 
-class PlayerTeam(PlayerTeamBase):
+class PlayerTeamUpdate(PlayerTeamBase):
+   pass
+
+
+class UserNested(BaseSchema):
     id: int
-    user_id: int
-    model_config = ConfigDict(from_attributes=True)
+    username: str
 
+class StationOrderNested(BaseSchema):
+    id: int
 
-class PlayerTeamWithUser(PlayerTeam):
-    user: User
+class PlayerTeamWithRelations(PlayerTeamBase):
+    id: int
+    user: Optional[UserNested] = None
+    stations: Optional[StationOrderNested] = None
+
+# Схемы для специальных операций
+class AddScoreRequest(BaseModel):
+    score_to_add: int
+
+class SetStationRequest(BaseModel):
+    station_number: int

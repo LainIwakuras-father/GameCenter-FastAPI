@@ -1,6 +1,8 @@
 # StationOrder schemas
 from typing import Optional
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel
+
+from app.schemas.base import BaseSchema
 
 
 class StationOrderBase(BaseModel):
@@ -9,15 +11,29 @@ class StationOrderBase(BaseModel):
     third_id: Optional[int] = None
     fourth_id: Optional[int] = None
     fifth_id: Optional[int] = None
-    sixth_id: Optional[int] = None
-    seventh_id: Optional[int] = None
-    eighth_id: Optional[int] = None
-    ninth_id: Optional[int] = None
-    tenth_id: Optional[int] = None
+    
 
 class StationOrderCreate(StationOrderBase):
     pass
 
-class StationOrder(StationOrderBase):
+class StationOrderUpdate(StationOrderBase):
+    pass
+
+# Схемы с отношениями
+class StationNested(BaseSchema):
     id: int
-    model_config = ConfigDict(from_attributes=True)
+    name: str
+    description: Optional[str] = None
+
+class StationOrderWithRelations(StationOrderBase):
+    id: int
+    first: Optional[StationNested] = None
+    second: Optional[StationNested] = None
+    third: Optional[StationNested] = None
+    fourth: Optional[StationNested] = None
+    fifth: Optional[StationNested] = None
+    sixth: Optional[StationNested] = None
+    seventh: Optional[StationNested] = None
+    eighth: Optional[StationNested] = None
+    ninth: Optional[StationNested] = None
+    tenth: Optional[StationNested] = None

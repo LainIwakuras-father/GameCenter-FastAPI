@@ -1,25 +1,14 @@
-from typing import Optional
-from sqlalchemy import ForeignKey, String
-from sqlalchemy.orm import  Mapped, mapped_column, relationship
+from tortoise import fields,models
 
-from app.db.db import Base
-from app.models.station import Station
-from app.models.user import User
+class Curator(models.Model):
+    id = fields.IntField(pk=True)
+    #one-to-many
+    station = fields.ForeignKeyField("models.Station",null=True)
 
-
-
-
-class Curator(Base):
-    __tablename__ = "curators"
+    #one-to-one 
+    user = fields.OneToOneField(
+        "models.User",
+        related_name="curator"
+        )
     
-    id: Mapped[int] = mapped_column(primary_key=True, index=True)
-    station_id: Mapped[Optional[int]] = mapped_column(ForeignKey("stations.id"), nullable=True)
-    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), unique=True)
-    name: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
-    
-    # Relationships
-    station: Mapped[Optional["Station"]] = relationship()
-    user: Mapped["User"] = relationship(back_populates="curator")
-
-    def __repr__(self):
-        return f"{self.name} " 
+    name = fields.CharField(max_length=100, null=True)
