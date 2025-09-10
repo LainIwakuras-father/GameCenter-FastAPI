@@ -9,10 +9,10 @@ class PlayerTeamRepository(BaseRepository):
 
 
     async def get_all_with_user_station(self) -> List[PlayerTeam]:
-        return await PlayerTeam.all().prefetch_related("user", "stations").all()
+        return await PlayerTeam.all().prefetch_related("user").all()
 
     async def get_by_id_with_user_station(self, id: int) -> Optional[PlayerTeam]:
-        return await PlayerTeam.filter(id=id).prefetch_related("user", "stations").first()
+        return await PlayerTeam.filter(id=id).prefetch_related("user").first()
 
     async def add_score(self, id: int, score_to_add: int) -> Optional[PlayerTeam]:
         return await self.update(id, {"score": PlayerTeam.score + score_to_add})

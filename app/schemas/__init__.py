@@ -7,7 +7,7 @@ from app.schemas.curator import (
 from app.schemas.player_team import (
     PlayerTeamBase, PlayerTeamCreate, PlayerTeamUpdate,
     PlayerTeamWithRelations,
-    AddScoreRequest, SetStationRequest
+    
 )
 from app.schemas.station import (
     StationBase, StationCreate, StationUpdate,

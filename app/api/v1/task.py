@@ -24,7 +24,7 @@ async def create_task(task_data: TaskCreate):
 
 @router.put("/api/task{id}",response_model=TaskUpdate)
 async def update_task(id:int , task_data:TaskUpdate):
-    return await task_service.update_task(id=id,task_data=task_data)
+    return await task_service.update_task(id=id,task_data=task_data.model_dump())
 
 @router.delete("/api/task{id}")
 async def delete_task(id:int):

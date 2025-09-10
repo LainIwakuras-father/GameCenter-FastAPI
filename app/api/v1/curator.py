@@ -26,11 +26,11 @@ async def create_curator(curator_data: CuratorCreate):
 
 @router.put("/api/curator/{id}")
 async def update_curator(id: int,curator_data:CuratorUpdate):
-    return await curator_service.update_curator(id=id,curator_data=curator_data)
+    return await curator_service.update_curator(id=id,curator_data=curator_data.model_dump())
 
 @router.delete("/api/curator/{id}")
 async def delete_curator(id: int):
-    pass
+    return await curator_service.delete_curator(id)
 
 
 

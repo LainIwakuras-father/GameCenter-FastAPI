@@ -12,10 +12,10 @@ class CuratorService():
         return await self.repository.get_by_id(id)
     
     async def create_curator(self, curator_data: Dict[str, Any]) -> Any:
-        return await self.repository.create(curator_data)
+        return await self.repository.create(**curator_data)
     
     async def update_curator(self, id: int, curator_data: Dict[str, Any]) -> Optional[Any]:
-        return await self.repository.update(id, curator_data)
+        return await self.repository.update(id, **curator_data)
     
     async def delete_curator(self, id: int) -> bool:
         return await self.repository.delete(id=id)

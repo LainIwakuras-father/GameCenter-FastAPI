@@ -11,10 +11,10 @@ class PlayerTeamService():
         return await self.repository.get_by_id(id)
     
     async def create_player_team(self, team_data: Dict[str, Any]) -> Any:
-        return await self.repository.create(team_data)
+        return await self.repository.create(**team_data)
     
     async def update_player_team(self, id: int, team_data: Dict[str, Any]) -> Optional[Any]:
-        return await self.repository.update(id, team_data)
+        return await self.repository.update(id, **team_data)
     
     async def delete_player_team(self, id: int) -> bool:
         return await self.repository.delete(id=id)

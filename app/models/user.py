@@ -4,6 +4,9 @@ from tortoise import fields, models
 from tortoise.contrib.pydantic import pydantic_model_creator
 from datetime import datetime
 
+from app.models.curator import Curator
+from app.models.player_team import PlayerTeam
+
 class User(models.Model):
     id = fields.IntField(pk=True)
     
@@ -23,7 +26,9 @@ class User(models.Model):
     # Даты
     last_login = fields.DatetimeField(null=True)
     date_joined = fields.DatetimeField(auto_now_add=True)
-    
+    #Отношения one-to-one
+    # curator: fields.OneToOneRelation["Curator"]
+    # player_team: fields.OneToOneRelation["PlayerTeam"]
    
     
     class Meta:

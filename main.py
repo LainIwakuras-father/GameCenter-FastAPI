@@ -10,13 +10,21 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.api.all_routers import routers
 from app.db.db import close_db, init_db
+from app.models.user import User
 
-
+async def test():
+      
+    await User.create()
 
 @asynccontextmanager
 async def lifespan_app(app: FastAPI) -> AsyncGenerator[None, None]:
             await init_db()
+            await test()
             logger.info("создаю БД")
+
+
+
+
             # db connected
             yield
             # app teardown

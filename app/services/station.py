@@ -6,7 +6,7 @@ class StationService():
     repository = StationRepository()
     
     async def get_all_stations(self) -> List[Any]:
-        return await self.repository.get_all()
+        return await self.repository.get_all_with_tasks()
     
     async def get_station_by_id(self, id: int) -> Optional[Any]:
         return await self.repository.get_by_id(id)
