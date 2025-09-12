@@ -39,3 +39,29 @@ async def init_admin(app: FastAPI):
     )
 
     app.mount("/admin",admin_app)
+
+    # Функция создания начального суперпользователя
+async def create_initial_superuser():
+    superuser = await User.get_or_none(username="admin")
+    if not superuser:
+        superuser = User(
+            username="admin",
+            email="admin@example.com",
+            is_staff=True,
+            is_superuser=True
+        )
+        superuser.set_password("admin123")
+        await superuser.save()
+        
+        # Создаем профиль администратора
+        admin_profile = AdminProfile(
+            user=superuser,
+            department="IT",
+            permissions=["all"],
+            can_manage_users=True,
+            can_manage_content=True,
+            can_view_reports=True
+        )
+        await admin_profile.save()
+        
+        print("Создан суперпользователь: admin / admin123")
