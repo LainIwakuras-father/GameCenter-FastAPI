@@ -11,7 +11,8 @@ class Station(models.Model):
     
     task = fields.ForeignKeyField("models.Task",null=True)
 
-
+    class Meta:
+        table = "stations"
 
 
 

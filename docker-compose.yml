@@ -1,0 +1,40 @@
+services:
+  db:
+      image: postgres:15
+      container_name: db_gamecenter
+      ports:
+        - 5432:5432
+      environment:
+        - POSTGRES_USER=${DB_USER}
+        - POSTGRES_PASSWORD=${DB_PASS}
+        - POSTGRES_DB=${DB_NAME}
+      volumes:
+        - postgres_data:/var/lib/postgres/data
+      networks:
+        - network
+
+  redis:
+    image: redis:7-alpine
+    volumes:
+      - redis_data:/data
+
+  web:
+        container_name: web_gamecenter
+        build: .
+        command: uvicorn src.main:app --host 0.0.0.0 --port 80
+        env_file:
+          - .env
+        ports:
+          - 80:80
+        depends_on:
+          - db
+        networks:
+          - network
+
+networks:
+  network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:

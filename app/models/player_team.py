@@ -18,4 +18,5 @@ class PlayerTeam(models.Model):
     # поле с валидацией чтобы не было меньше 1!
     current_station = fields.IntField(default=1, validators=[MinValueValidator(1)])
 
-
+    class Meta:
+        table = "player_teams"

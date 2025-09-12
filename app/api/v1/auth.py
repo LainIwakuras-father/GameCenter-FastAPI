@@ -1,8 +1,53 @@
 from fastapi import APIRouter, Depends, HTTPException, Response, status
-from sqlalchemy.orm import Session
+from fastapi.security import OAuth2PasswordRequestForm
+
+from app.models.user import User
+from app.utils.auth_utils import verify_password,create_encoded_access_token
+from app.utils.dependencies import get_current_user
 
 
-router = APIRouter()
+router = APIRouter(tags=["auth"])
+
+@router.get("/api/token")
+async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
+    # Ищем пользователя по username
+    user = await User.get_or_none(username=form_data.username)
+    if not user or not verify_password(form_data.password, user.password):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Неверное имя пользователя или пароль",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    
+    # Создаем JWT токен
+    access_token = create_encoded_access_token(
+        payload={"user_id": user.id, "username": user.username}
+    )
+    
+    return {"access_token": access_token, "token_type": "bearer"}
+
+@router.get("/api/token/refresh")
+async def refresh_token(current_user: User = Depends(get_current_user)):
+    access_token = create_encoded_access_token(
+        payload={"user_id": current_user.id, "username": current_user.username}
+    )
+    return {"access_token": access_token, "token_type": "bearer"}
+
+@router.get("/api/token/verify")
+async def verify_token(current_user: User = Depends(get_current_user)):
+     return {"message": "Токен валиден"}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 """
@@ -48,18 +93,3 @@ logout
 # async def logout_user(response: Response):
 #     response.delete_cookie(key="users_access_token")
 #     return {"message": "Пользователь успешно вышел из системы"}
-
-
-
-
-@router.get("/api/token")
-async def get_token():
-    pass
-
-@router.get("/api/token/refresh")
-async def refresh_token():
-    pass
-
-@router.get("/api/token/verify")
-async def verify_token():
-    pass

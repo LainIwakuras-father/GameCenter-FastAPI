@@ -6,3 +6,5 @@ class Task(models.Model):
     question = fields.TextField(null=True)
     answer = fields.TextField(null=True)
     
+    class Meta:
+        table = "tasks"

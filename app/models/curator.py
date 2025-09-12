@@ -12,3 +12,6 @@ class Curator(models.Model):
         )
     
     name = fields.CharField(max_length=100, null=True)
+
+    class Meta:
+        table = "curators"
