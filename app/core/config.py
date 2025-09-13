@@ -9,12 +9,20 @@ class Settings(BaseSettings):
     DB_HOST: str = "localhost"
 
 
+
+    REDIS_HOST: str = "localhost"
+    REDIS_PORT: str = "6379"
+
     SECRET_KEY: str = "*8n!lj)^x3zc)-pa(%k9*$!+ugk_4jzqivy8$rsvuib_p=^xk+"
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 3
 
     ENVIRONMENT: str = "development"
     
+    @property
+    def REDIS_URL(self)->str:
+        return f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}"
+
     @property
     def DB_URL(self)->str:
         return f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASSWORD}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"

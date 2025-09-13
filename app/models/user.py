@@ -23,26 +23,23 @@ class User(models.Model):
     is_active = fields.BooleanField(default=True)
     is_superuser = fields.BooleanField(default=False)
     
-    # Даты
-    last_login = fields.DatetimeField(null=True)
-    date_joined = fields.DatetimeField(auto_now_add=True)
-    #Отношения one-to-one
-    # curator: fields.OneToOneRelation["Curator"]
-    # player_team: fields.OneToOneRelation["PlayerTeam"]
-   
-    
+
     class Meta:
         table = "users"
     
     def __str__(self):
         return self.username
     
-    @property
-    def full_name(self) -> str:
-        """Возвращает полное имя пользователя"""
-        if self.first_name and self.last_name:
-            return f"{self.first_name} {self.last_name}"
-        return self.username
+
+
+
+
+
+
+
+
+
+
 
 # Pydantic схемы для User
 User_Pydantic = pydantic_model_creator(User, name="User", exclude=("password",))

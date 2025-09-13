@@ -15,3 +15,5 @@ class Curator(models.Model):
 
     class Meta:
         table = "curators"
+
+

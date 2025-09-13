@@ -1,17 +1,24 @@
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
+
+
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from fastadmin import fastapi_app as admin_app
+
 from loguru import logger
 from tortoise import Tortoise
 import uvicorn
 
 
-
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
+from app.utils.create_superuser import create_superuser
 from app.api.all_routers import routers
 from app.db.db import close_db, init_db
 from app.models.user import User
-from app.initilizer import init_admin
+
+
+from dotenv import load_dotenv
+load_dotenv()
 # async def test():
       
 #     await User.create()
@@ -20,12 +27,9 @@ from app.initilizer import init_admin
 async def lifespan_app(app: FastAPI) -> AsyncGenerator[None, None]:
             await init_db()
             logger.info("создаю БД")
+            # await create_superuser()
             # await test()
             # logger.info("создаю тестовые сущности")
-            await init_admin(app=app)
-            # logger.info("создал админку")
-
-
             # db connected
             yield
             # app teardown
@@ -39,7 +43,7 @@ app = FastAPI(
     version="0.0.1", lifespan=lifespan_app
 )
 
-
+app.mount("/admin", admin_app)
 
 app.add_middleware(
     CORSMiddleware,
@@ -54,13 +58,13 @@ app.include_router(router=routers)
 
 
 
-@app.get("/health")
-async def health_check():
-    try:
-        await Tortoise.get_connection("default").execute_query("SELECT 1")
-        return {"status": "healthy"}
-    except Exception:
-        return {"status": "unhealthy"}, 500
+# app.get("/health")
+# async def health_check():
+#     try:
+#         await Tortoise.get_connection("default").execute_query("SELECT 1")
+#         return {"status": "healthy"}
+#     except Exception:
+#         return {"status": "unhealthy"}, 500
 
 if __name__ == "__main__":
     logger.info("Server is running....")
