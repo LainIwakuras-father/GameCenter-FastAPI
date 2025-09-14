@@ -2,10 +2,6 @@ from loguru import logger
 import sys
 from pathlib import Path
 
-# # 📂 Папка для логов
-# LOG_DIR = Path(__file__).resolve().parent.parent.parent / "logs"
-# LOG_DIR.mkdir(parents=True, exist_ok=True)
-
 # 🧹 Очищаем все старые хендлеры (иначе будут дубли)
 logger.remove()
 

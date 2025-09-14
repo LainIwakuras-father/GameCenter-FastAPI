@@ -13,7 +13,7 @@ class User(models.Model):
     # Основные поля
     username = fields.CharField(max_length=150, unique=True)
     email = fields.CharField(max_length=255, unique=True, null=True)
-    password = fields.CharField(max_length=128)
+    hash_password = fields.CharField(max_length=128)
     
     # Личная информация
     first_name = fields.CharField(max_length=30, null=True)
@@ -42,7 +42,7 @@ class User(models.Model):
 
 
 # Pydantic схемы для User
-User_Pydantic = pydantic_model_creator(User, name="User", exclude=("password",))
+User_Pydantic = pydantic_model_creator(User, name="User", exclude=("hash_password",))
 UserIn_Pydantic = pydantic_model_creator(User, name="UserIn", exclude_readonly=True)
 UserAuth_Pydantic = pydantic_model_creator(User, name="UserAuth", include=("id", "username", "email"))
 #    username

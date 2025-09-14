@@ -11,7 +11,7 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 security = HTTPBearer()
 
 
-async def get_current_user(
+async def get_current_auth_user(
     credentials: HTTPAuthorizationCredentials = Depends(security)
 )-> User:
     try:
