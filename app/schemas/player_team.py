@@ -3,7 +3,7 @@ from datetime import datetime
 from typing import Optional
 from pydantic import BaseModel
 
-from app.schemas.base import BaseSchema
+from schemas.base import BaseSchema
 
 
 class PlayerTeamBase(BaseSchema):

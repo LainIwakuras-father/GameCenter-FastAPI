@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 
-from app.schemas.curator import CuratorCreate, CuratorUpdate
-from app.services.curator import CuratorService
+from schemas.curator import CuratorCreate, CuratorUpdate
+from services.curator import CuratorService
 
 
 router = APIRouter(prefix="/api/curator", tags=["curators"])

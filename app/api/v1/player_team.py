@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
-from app.schemas.player_team import  PlayerTeamCreate
-from app.services.player_team import PlayerTeamService
+from schemas.player_team import  PlayerTeamCreate
+from services.player_team import PlayerTeamService
 
 router = APIRouter(tags=["playerteam"])
 
@@ -21,7 +21,7 @@ async def create_player_team(team_data:PlayerTeamCreate ):
 
 @router.put("/api/playerteam/{id}")
 async def update_player_team(id: int,team_data:PlayerTeamCreate):
-    return await player_team_service.update_player_team(id=id, team_data=team_data)
+    return await player_team_service.update_player_team(id=id, team_data=team_data.model_dump())
 
 @router.delete("/api/playerteam/{id}")
 async def delete_player_team(id: int):

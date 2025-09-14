@@ -3,10 +3,10 @@ from passlib.context import CryptContext
 from fastapi import Depends, HTTPException, Request, status
 from jwt import PyJWTError, decode, encode
 
-from app.core.config import get_auth_data
-from app.utils.exception import NoJwtException
+from config.config import auth_settings
+from utils.exception import NoJwtException
 
-auth_data = get_auth_data()
+auth_data = auth_settings.get_auth_data
 
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")

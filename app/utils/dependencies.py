@@ -1,21 +1,21 @@
 from fastapi import Depends, HTTPException,status
 from fastapi.security import OAuth2PasswordBearer
 
-from app.models.curator import Curator
-from app.models.player_team import PlayerTeam
-from app.models.user import User
-from app.utils.auth_utils import decoded_token
+from models.curator import Curator
+from models.player_team import PlayerTeam
+from models.user import User
+from utils.auth_utils import decoded_token
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
-
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/token")
-
+# oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/token")
+security = HTTPBearer()
 
 
 async def get_current_user(
-    token: str = Depends(oauth2_scheme)
+    credentials: HTTPAuthorizationCredentials = Depends(security)
 )-> User:
     try:
-        payload = decoded_token(token)
+        payload = decoded_token(credentials.credentials)
         user_id = int(payload.get("user_id")) 
         if user_id is None:
             raise HTTPException(

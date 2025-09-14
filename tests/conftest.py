@@ -1,100 +1,26 @@
-import asyncio
 import pytest
-from httpx import AsyncClient
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
-from sqlalchemy.orm import sessionmaker
+import pytest_asyncio
+from tortoise import Tortoise
 
-from app.main import app
-
-
-# Тестовая база данных (лучше использовать отдельную БД для тестов)
-TEST_DATABASE_URL = "postgresql+asyncpg://user:password@localhost/test_db"
-
-# Асинхронный движок для тестов
-engine = create_async_engine(TEST_DATABASE_URL, echo=True)
-AsyncTestingSessionLocal = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
-
-@pytest.fixture(scope="session")
-def event_loop():
-    """Создает экземпляр цикла событий для тестов."""
-    policy = asyncio.get_event_loop_policy()
-    loop = policy.new_event_loop()
-    yield loop
-    loop.close()
-
-@pytest.fixture(scope="function", autouse=True)
-async def setup_database():
-    """Создает и очищает базу данных перед каждым тестом."""
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
-    yield
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.drop_all)
-
-@pytest.fixture
-async def db_session(setup_database):
-    """Создает асинхронную сессию для работы с базой данных."""
-    async with AsyncTestingSessionLocal() as session:
-        yield session
-        await session.rollback()  # Откатываем транзакцию после каждого теста
-
-@pytest.fixture
-def override_get_db(db_session):
-    """Переопределяем зависимость get_db для тестов."""
-    async def _override_get_db():
-        yield db_session
-    return _override_get_db
-
-@pytest.fixture
-async def async_client(override_get_db):
-    """Создает асинхронного клиента для тестирования API."""
-    app.dependency_overrides[get_db] = override_get_db
-    async with AsyncClient(app=app, base_url="http://test") as ac:
-        yield ac
-    app.dependency_overrides.clear()
-
-# @pytest.fixture
-# async def auth_headers(async_client):
-#     """Фикстура для получения аутентификационных заголовков."""
-#     # Здесь должна быть реализация получения JWT токена
-#     login_data = {"username": "testuser", "password": "testpass"}
-#     response = await async_client.post("/api/token", data=login_data)
-#     token = response.json()["access_token"]
-#     return {"Authorization": f"Bearer {token}"}
+from server.server import app
+from tests.utils import client_manager, ClientManagerType
 
 
+@pytest_asyncio.fixture(scope="module")
+async def async_client() -> ClientManagerType:
+    async with client_manager(app) as c:
+        yield c
 
 
-# import pytest
-# from fastapi import FastAPI
-# from fastapi.testclient import TestClient
-# from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
-# from sqlalchemy.orm import sessionmaker
+@pytest.fixture(scope="module")
+def anyio_backend() -> str:
+    return "asyncio"
 
-# from app.main import app
-# from app.dependencies import get_db_session, get_station_service
-# from app.services.station_service import StationService
-# from app.repositories.station_repository import StationRepository
 
-# # Тестовые зависимости
-# async def override_get_db_session():
-#     """Тестовая сессия базы данных"""
-#     test_engine = create_async_engine("sqlite+aiosqlite:///:memory:")
-#     TestingSessionLocal = sessionmaker(test_engine, class_=AsyncSession, expire_on_commit=False)
-    
-#     async with TestingSessionLocal() as session:
-#         yield session
-
-# async def override_get_station_service(db: AsyncSession = Depends(override_get_db_session)):
-#     """Тестовый сервис станций"""
-#     return StationService(StationRepository())
-
-# # Переопределение зависимостей для тестов
-# app.dependency_overrides[get_db_session] = override_get_db_session
-# app.dependency_overrides[get_station_service] = override_get_station_service
-
-# @pytest.fixture
-# def test_client():
-#     """Тестовый клиент FastAPI"""
-#     with TestClient(app) as client:
-#         yield client
+@pytest_asyncio.fixture(autouse=True)
+async def clean_db():
+    """
+    Фикстура для очистки базы данных перед каждым тестом, чтобы тесты были независимыми.
+    """
+    for model in Tortoise.apps.get("models", {}).values():
+        await model.all().delete()

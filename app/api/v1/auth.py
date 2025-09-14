@@ -1,22 +1,37 @@
+from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException, Response, status
 from fastapi.security import OAuth2PasswordRequestForm
 
-from app.models.user import User
-from app.utils.auth_utils import verify_password,create_encoded_access_token
-from app.utils.dependencies import get_current_user
+from models.user import User
+from utils.auth_utils import verify_password,create_encoded_access_token
+from utils.dependencies import get_current_user
+from pydantic import BaseModel
 
+
+
+
+
+
+
+class UserLogin(BaseModel):
+    username: str
+    password: str
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
 
 router = APIRouter(tags=["auth"])
 
 @router.get("/api/token")
-async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
+async def login_for_access_token(form_data:UserLogin):
     # Ищем пользователя по username
     user = await User.get_or_none(username=form_data.username)
     if not user or not verify_password(form_data.password, user.password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Неверное имя пользователя или пароль",
-            headers={"WWW-Authenticate": "Bearer"},
+            headers={"WWW-Authenticate": "Bearer"}
         )
     
     # Создаем JWT токен
@@ -26,12 +41,15 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
     
     return {"access_token": access_token, "token_type": "bearer"}
 
+
+
 @router.get("/api/token/refresh")
 async def refresh_token(current_user: User = Depends(get_current_user)):
     access_token = create_encoded_access_token(
         payload={"user_id": current_user.id, "username": current_user.username}
     )
     return {"access_token": access_token, "token_type": "bearer"}
+
 
 @router.get("/api/token/verify")
 async def verify_token(current_user: User = Depends(get_current_user)):

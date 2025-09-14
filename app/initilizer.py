@@ -8,12 +8,10 @@ from fastapi_admin import app as admin_app
 from fastapi_admin.providers.login import UsernamePasswordProvider
 from fastapi_admin.app import app as admin_app
 
-from app.core.config import settings
+from core.config import settings
 
-from app.models.admin import Admin
+from models.admin import Admin
 
-async def init_db():
-    pass
 
 # login_provider=UsernamePasswordProvider(
 #                         admin_model=Admin,

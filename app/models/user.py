@@ -4,8 +4,8 @@ from tortoise import fields, models
 from tortoise.contrib.pydantic import pydantic_model_creator
 from datetime import datetime
 
-from app.models.curator import Curator
-from app.models.player_team import PlayerTeam
+from models.curator import Curator
+from models.player_team import PlayerTeam
 
 class User(models.Model):
     id = fields.IntField(pk=True)

@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
-from app.services.station_order import StationOrderService
-from app.schemas.station_order import StationOrderCreate, StationOrderUpdate
+from services.station_order import StationOrderService
+from schemas.station_order import StationOrderCreate, StationOrderUpdate
 
 router = APIRouter(tags=["stationorder"])
 

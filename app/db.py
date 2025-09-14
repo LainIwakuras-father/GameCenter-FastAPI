@@ -1,7 +1,5 @@
 from tortoise import Tortoise
-from tortoise.contrib.fastapi import register_tortoise
-from tortoise.backends.base.config_generator import generate_config
-from app.core.config import settings
+from config.config import db_settings as settings
 
 # Конфигурация подключения к базе данных
 DB_CONFIG = {
@@ -22,12 +20,7 @@ DB_CONFIG = {
     "apps": {
         "models": {
             "models": [
-                "app.models.user",
-                "app.models.station", 
-                "app.models.station_order",
-                "app.models.player_team",
-                "app.models.curator",
-                "app.models.task",
+                "models.models",
                 # "aerich.models"  # Для миграций
             ],
             "default_connection": "default",
@@ -42,10 +35,9 @@ async def init_db():
     Инициализация подключения к базе данных
     """
     await Tortoise.init(config=DB_CONFIG)
-    
     # # Генерировать схемы автоматически (только для разработки)
-    # if settings.ENVIRONMENT == "development":
-    await Tortoise.generate_schemas()
+    if settings.ENVIRONMENT == "development":
+        await Tortoise.generate_schemas()
 
 
 async def close_db():
@@ -53,15 +45,3 @@ async def close_db():
     Закрытие подключений к базе данных
     """
     await Tortoise.close_connections()
-
-
-def init_tortoisedb(app):
-    """
-    Инициализация Tortoise ORM для FastAPI приложения
-    """
-    register_tortoise(
-        app,
-        config=DB_CONFIG,
-        generate_schemas=settings.ENVIRONMENT == "development",
-        add_exception_handlers=True,
-    )

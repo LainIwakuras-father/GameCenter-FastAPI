@@ -1,6 +1,6 @@
 from typing import List, Optional, Dict, Any
 
-from app.repositories.task import TaskRepository
+from repositories.task import TaskRepository
 
 class TaskService():
     repository = TaskRepository()

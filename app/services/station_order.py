@@ -1,6 +1,6 @@
 from typing import List, Optional, Dict, Any
 
-from app.repositories.station_order import StationOrderRepository
+from repositories.station_order import StationOrderRepository
 
 class StationOrderService():
     repository = StationOrderRepository()

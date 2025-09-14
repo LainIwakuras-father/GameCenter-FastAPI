@@ -1,5 +1,5 @@
-from app.models.task import Task
-from app.repositories.base import BaseRepository
+from models.models import Task
+from repositories.base import BaseRepository
 
 
 class TaskRepository(BaseRepository):

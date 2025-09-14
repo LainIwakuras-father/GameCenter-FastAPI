@@ -1,8 +1,8 @@
 from typing import List
 from fastapi import APIRouter
 
-from app.schemas.station import StationCreate, StationUpdate, StationWithRelations
-from app.services.station import StationService
+from schemas.station import StationCreate, StationUpdate, StationWithRelations
+from services.station import StationService
 
 router = APIRouter(tags=["station"])
 

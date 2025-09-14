@@ -20,3 +20,7 @@ class PlayerTeam(models.Model):
 
     class Meta:
         table = "player_teams"
+
+
+
+

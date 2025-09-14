@@ -1,19 +1,30 @@
-
-
+from collections.abc import AsyncGenerator
+from contextlib import asynccontextmanager
 import uuid
-from app.models.curator import Curator
-from app.models.player_team import PlayerTeam
-from app.models.station import Station
-from app.models.station_order import StationOrder
-from app.models.user import User
 
 
-
-from fastadmin import register, TortoiseModelAdmin, WidgetType
-
+from models.models import Curator, PlayerTeam, Station, StationOrder, Task, User
 
 
-from app.models.task import Task
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from fastadmin import fastapi_app as admin_app
+
+
+from config.log_config import app_logger as logger
+from tortoise import Tortoise
+import uvicorn
+
+
+from api.all_routers import routers
+from db import close_db, init_db
+
+
+from fastadmin import register
+from fastadmin import WidgetType, TortoiseModelAdmin
+import fastadmin
+
+
 
 # Админка для Task
 @register(Task)
@@ -103,3 +114,101 @@ class CuratorAdmin(TortoiseModelAdmin):
     list_display = ["id", "name", "station"]
     search_fields = ["name"]
     list_filter = ["station"]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# async def test():
+      
+#     await User.create()
+
+@asynccontextmanager
+async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
+    try:         
+        await init_db()
+        logger.info("создаю БД")
+        user = await User.get_or_none(username="admin")
+        if not user:
+            await User.create(username="admin", password="admin", is_superuser=True)
+            logger.info("создаю админа если его не было")
+                # from tortoise import Tortoise
+                # print(Tortoise.apps)
+        yield
+
+    except Exception:
+        raise
+    finally:
+        # db connections closed
+        await close_db()
+        logger.info("закрыл БД")
+
+
+
+
+
+app = FastAPI(
+    title="GamaCenterAPI",
+    description="API к престоящему мероприятию",
+    version="1.0.0", lifespan=lifespan
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],#замени на список доменов, которые могут обращаться к нашему API
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
+
+\
+app.include_router(router=routers)
+
+
+
+
+app.mount("/admin", admin_app)
+
+
+
+if __name__ == "__main__":
+    logger.info("Server is running....")
+    uvicorn.run(app, host="127.0.0.1", port=8000)

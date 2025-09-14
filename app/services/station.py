@@ -1,6 +1,6 @@
 from typing import List, Optional, Dict, Any
 
-from app.repositories.station import StationRepository
+from repositories.station import StationRepository
 
 class StationService():
     repository = StationRepository()

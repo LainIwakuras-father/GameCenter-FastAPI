@@ -1,5 +1,5 @@
-from app.models.station import Station
-from app.repositories.base import BaseRepository
+from models.models import Station
+from repositories.base import BaseRepository
 
 
 class StationRepository(BaseRepository):

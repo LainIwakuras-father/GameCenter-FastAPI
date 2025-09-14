@@ -1,7 +1,7 @@
 from typing import Any, Dict, List, Optional
-from app.models.curator import Curator
-from app.models.user import User
-from app.repositories.base import BaseRepository
+from models.models import Curator
+from models.user import User
+from repositories.base import BaseRepository
 
 
 class CuratorRepository(BaseRepository):

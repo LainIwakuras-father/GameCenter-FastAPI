@@ -1,5 +1,5 @@
 from typing import List, Optional, Dict, Any
-from app.repositories.player_team import PlayerTeamRepository
+from repositories.player_team import PlayerTeamRepository
 
 class PlayerTeamService():
     repository = PlayerTeamRepository()

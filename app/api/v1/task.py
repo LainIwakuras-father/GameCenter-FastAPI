@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
-from app.schemas.task import TaskCreate, TaskUpdate
-from app.services.task import TaskService
+from schemas.task import TaskCreate, TaskUpdate
+from services.task import TaskService
 
 
 

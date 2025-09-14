@@ -1,5 +1,5 @@
 from typing import List, Optional, Dict, Any
-from app.repositories.curator import CuratorRepository
+from repositories.curator import CuratorRepository
 
 
 class CuratorService():
