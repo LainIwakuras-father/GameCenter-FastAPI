@@ -104,3 +104,7 @@ auth_settings = AUTH_Settings()
 admin_settings = ADMIN_Settings()
 
 
+
+if __name__=="__main__":
+    print(admin_settings.ADMIN_SECRET_KEY)
+    print(admin_settings.ADMIN_USER_MODEL)
