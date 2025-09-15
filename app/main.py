@@ -3,6 +3,7 @@ from contextlib import asynccontextmanager
 import uuid
 
 
+from utils.auth_utils import verify_password, get_password_hash
 from models.models import Curator, PlayerTeam, Station, StationOrder, Task, User
 
 
@@ -60,10 +61,12 @@ class UserAdmin(TortoiseModelAdmin):
     }
 
     async def authenticate(self, username: str, password: str) -> uuid.UUID | int | None:
-        obj = await self.model_cls.filter(username=username, password=password, is_superuser=True).first()
-        if not obj:
+        user = await self.model_cls.filter(username=username,  is_superuser=True).first()
+        if not user:
             return None
-        return obj.id
+        if not verify_password(password, user.hash_password):
+            return None
+        return user.id
 
     async def change_password(self, id: uuid.UUID | int, password: str) -> None:
         user = await self.model_cls.filter(id=id).first()
@@ -168,7 +171,8 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
         logger.info("создаю БД")
         user = await User.get_or_none(username="admin")
         if not user:
-            await User.create(username="admin", password="admin", is_superuser=True)
+            hash_password = get_password_hash("admin")
+            await User.create(username="admin", hash_password=hash_password, is_superuser=True)
             logger.info("создаю админа если его не было")
                 # from tortoise import Tortoise
                 # print(Tortoise.apps)
@@ -211,4 +215,4 @@ app.mount("/admin", admin_app)
 
 if __name__ == "__main__":
     logger.info("Server is running....")
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+    uvicorn.run("main:app", host="127.0.0.1", port=8000,reload=True)

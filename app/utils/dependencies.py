@@ -6,7 +6,7 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
 from models.curator import Curator
 from models.player_team import PlayerTeam
-from models.user import User
+from models.models import User
 from utils.auth_utils import decoded_jwt
 from utils.exception import AccessTokenRequired, NoJwtException, RefreshTokenRequired
 
@@ -99,11 +99,11 @@ async def get_current_user(
         return user
     except HTTPException:
         raise
-    except Exception:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Ошибка аутентификации"
-        )
+    # except Exception:
+    #     raise HTTPException(
+    #         status_code=status.HTTP_401_UNAUTHORIZED,
+    #         detail="Ошибка аутентификации"
+    #     )
     
 
 

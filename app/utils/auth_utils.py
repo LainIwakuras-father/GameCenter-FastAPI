@@ -14,15 +14,15 @@ def create_encoded_jwt(
     payload: dict,
     secret_key: str = auth_data["secret_key"],
     algorithm: str = auth_data["algorithm"],
-    expires_minutes: int = auth_data["expire_minutes"],
-    expires_timedelta: timedelta | None = None,
+    expire_minutes: int = auth_data["expire_minutes"],
+    expire_timedelta: timedelta | None = None,
 ):
     to_encode = payload.copy()
     now = datetime.now(timezone.utc)
-    if expires_timedelta:
-        expire = now + expires_timedelta
+    if expire_timedelta:
+        expire = now + expire_timedelta
     else:
-        expire = now + timedelta(minutes=expires_minutes)
+        expire = now + timedelta(minutes=expire_minutes)
     to_encode.update(
         exp=expire,
         iat=now,

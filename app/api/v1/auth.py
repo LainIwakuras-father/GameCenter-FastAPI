@@ -8,7 +8,7 @@ from pydantic import BaseModel
 from schemas.user import UserLoginSchema
 from utils.dependencies import RefreshTokenBearer, get_current_auth_user_for_refresh, get_current_user
 from utils.helpers import ACCESS_TOKEN_TYPE, REFRESH_TOKEN_TYPE, TOKEN_TYPE_FIELD, create_access_token, create_refresh_token
-from models.user import User
+from models.models import User
 from utils.auth_utils  import verify_password
 
 
@@ -109,11 +109,11 @@ async def validate_auth_user(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="invalid username or password",
     )
-    if not (user := await User.get_or_none(user_data.username)):
+    if not (user := await User.get_or_none(username=user_data.username)):
         raise unauthed_exc
 
     if not verify_password(
-        password=user_data.password,
+        plain_password=user_data.password,
         hashed_password=user.hash_password,
     ):
         raise unauthed_exc
@@ -147,7 +147,7 @@ async def validate_auth_user(
 
 
 
-@router.get("/api/token")
+@router.post("/api/token")
 async def login_for_access_token(
     user: User = Depends(validate_auth_user)
 ):
