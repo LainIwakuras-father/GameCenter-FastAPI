@@ -1,8 +1,9 @@
 from datetime import timedelta
 
+from models.models import User
 from config.config import auth_settings
 from utils.auth_utils import create_encoded_jwt
-from api.v1.auth import UserSchema
+
 
 
 TOKEN_TYPE_FIELD = "type"
@@ -25,12 +26,13 @@ def create_jwt(
     )
 
 
-def create_access_token(user: UserSchema) -> str:
+def create_access_token(username) -> str:
     jwt_payload = {
         # subject
-        "sub": user.username,
-        "username": user.username,
-        "email": user.email,
+
+        "username": username,
+        # "email": user.email,
+        
         # "logged_in_at"
     }
     return create_jwt(
@@ -40,9 +42,9 @@ def create_access_token(user: UserSchema) -> str:
     )
 
 
-def create_refresh_token(user: UserSchema) -> str:
+def create_refresh_token(username) -> str:
     jwt_payload = {
-        "sub": user.username,
+        "sub": username,
         # "username": user.username,
     }
     return create_jwt(

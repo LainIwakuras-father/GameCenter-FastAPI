@@ -14,7 +14,7 @@ def create_encoded_jwt(
     payload: dict,
     secret_key: str = auth_data["secret_key"],
     algorithm: str = auth_data["algorithm"],
-    expires_minutes: int = auth_data["expires_minutes"],
+    expires_minutes: int = auth_data["expire_minutes"],
     expires_timedelta: timedelta | None = None,
 ):
     to_encode = payload.copy()
@@ -26,6 +26,7 @@ def create_encoded_jwt(
     to_encode.update(
         exp=expire,
         iat=now,
+        
         )
 
     encoded = encode(

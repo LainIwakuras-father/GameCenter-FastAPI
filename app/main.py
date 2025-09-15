@@ -11,7 +11,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastadmin import fastapi_app as admin_app
 
 
-from app.config.logging import app_logger as logger
+from config.logging import app_logger as logger
 from tortoise import Tortoise
 import uvicorn
 

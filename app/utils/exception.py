@@ -34,6 +34,27 @@ class TokenNoFoundException(HTTPException):
         )
 
 
+class AccessTokenRequired(HTTPException):
+    """User has provided a refresh token when an access token is needed"""
+
+    def __init__(self):
+        super().__init__(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="User has provided a refresh token when an access token is needed"
+        )
+
+
+
+class RefreshTokenRequired(HTTPException):
+    """User has provided an access token when a refresh token is needed"""
+
+    def __init__(self):
+        super().__init__(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="User has provided an access token when a refresh token is needed"
+        )
+
+
+
+
 UserAlreadyExistsException = HTTPException(
     status_code=status.HTTP_409_CONFLICT,
     detail="Пользователь уже существует"
