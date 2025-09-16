@@ -4,7 +4,8 @@ from api.v1 import (
     task,
     player_team,
     station,
-    station_order
+    station_order,
+    user
     )
 
 
@@ -20,7 +21,9 @@ all_routers = [
     curator.router,
     player_team.router,
     station.router,
-    station_order.router
+    station_order.router,
+    user.router
+
 ]
 
 for router in all_routers:

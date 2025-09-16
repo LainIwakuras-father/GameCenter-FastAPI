@@ -4,9 +4,8 @@ from fastapi.security import OAuth2PasswordBearer
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
 
-from models.curator import Curator
-from models.player_team import PlayerTeam
-from models.models import User
+from config.logging import app_logger as logger
+from models.models import User, Curator, PlayerTeam
 from utils.auth_utils import decoded_jwt
 from utils.exception import AccessTokenRequired, NoJwtException, RefreshTokenRequired
 
@@ -75,14 +74,11 @@ async def get_current_auth_user_for_refresh(
     except:
         raise NoJwtException()
 
-async def get_current_user(
+async def IsAuthenticated(
     token_details: HTTPAuthorizationCredentials = Depends(AccessTokenBearer())
 )-> User:
     try:
         username = token_details["username"]
-
-
-
 
         if username is None:
             raise HTTPException(
@@ -106,20 +102,42 @@ async def get_current_user(
     #     )
     
 
-
-
-
-
-# async def get_user_role(user: User = Depends(get_current_user)):
-#     # Проверяем, является ли пользователь куратором
-#     curator = await Curator.get_or_none(user=user)
-#     if curator:
-#         return {"is_curator": True, "is_player": False}
-    
-#     # Проверяем, является ли пользователь игроком
-#     player = await PlayerTeam.get_or_none(user=user)
-#     if player:
-#         return {"is_curator": False, "is_player": True}
-    
-#     # Если не нашли ни одну роль
-#     return {"is_curator": False, "is_player": False}
+async def get_user_role(current_user: User = Depends(IsAuthenticated)) -> dict:
+    """
+    Получить профиль пользователя с информацией о ролях (куратор/игрок)
+    """
+    try:
+        is_curator: bool = await Curator.exists(user=current_user)
+        is_player_team: bool = await PlayerTeam.exists(user=current_user)
+        logger.warning(is_curator)
+        logger.warning(is_player_team)
+          # Формируем ответ
+        response_data = {
+            "user_id": current_user.id,
+            "is_curator": is_curator,
+            "is_player": is_player_team,
+            "curator_data": None,
+            "player_data": None
+        }
+        
+        # Добавляем детальную информацию если есть роль
+        if is_curator:
+            curator = await Curator.get(user=current_user)
+            response_data["curator_data"] = {
+                "curator_id": curator.id,
+            }
+        
+        if is_player_team:
+            player_team = await PlayerTeam.get(user=current_user)
+            response_data["player_data"] = {
+                "team_id": player_team.id,
+                "team_name": player_team.team_name,
+            }
+        
+        return response_data
+        
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Internal server error: {str(e)}"
+        )

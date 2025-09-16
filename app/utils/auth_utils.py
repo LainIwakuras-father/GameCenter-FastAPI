@@ -57,13 +57,13 @@ def decoded_jwt(
 
 
 def get_password_hash(
-        password: str
+        password: str | bytes
 ) -> str:
     return pwd_context.hash(password)
 
 def verify_password(
-        plain_password: str,
-        hashed_password: str
+        plain_password: str | bytes,
+        hashed_password: str | bytes
 ) -> bool:
     return pwd_context.verify(
         plain_password,

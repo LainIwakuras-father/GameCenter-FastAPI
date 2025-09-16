@@ -1,15 +1,18 @@
 
 from typing import Annotated
-from fastapi import APIRouter, Depends, Form, HTTPException, Response, status
+from fastapi import APIRouter, Depends, Form, HTTPException, Request, Response, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer, OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jwt import InvalidTokenError
 from pydantic import BaseModel
 
+
+from config.logging import app_logger as logger
+from utils.exception import NoJwtException
 from schemas.user import UserLoginSchema
-from utils.dependencies import RefreshTokenBearer, get_current_auth_user_for_refresh, get_current_user
+from utils.dependencies import RefreshTokenBearer, get_current_auth_user_for_refresh, IsAuthenticated, get_user_role
 from utils.helpers import ACCESS_TOKEN_TYPE, REFRESH_TOKEN_TYPE, TOKEN_TYPE_FIELD, create_access_token, create_refresh_token
 from models.models import User
-from utils.auth_utils  import verify_password
+from utils.auth_utils  import decoded_jwt, verify_password
 
 
 router = APIRouter(tags=["auth"])
@@ -18,87 +21,6 @@ class TokenInfo(BaseModel):
     access_token: str
     refresh_token: str | None = None
     token_type: str = "Bearer"
-
-
-
-# http_bearer = HTTPBearer(auto_error=False)
-# # oauth2_scheme = OAuth2PasswordBearer(
-# #     tokenUrl="/api/v1/auth/jwt/login/",
-# # )
-
-
-
-
-
-# def get_current_token_payload(
-#     credentials: HTTPAuthorizationCredentials = Depends(http_bearer),
-#     # token: str = Depends(oauth2_scheme),
-# ) -> dict:
-#     token = credentials.credentials
-#     try:
-#         payload = decoded_jwt(
-#             token=token,
-#         )
-#     except InvalidTokenError as e:
-#         raise HTTPException(
-#             status_code=status.HTTP_401_UNAUTHORIZED,
-#             detail=f"invalid token error: {e}",
-#             # detail=f"invalid token error",
-#         )
-#     return payload
-
-
-
-# def validate_token_type(
-#     payload: dict,
-#     token_type: str,
-# ) -> bool:
-#     current_token_type = payload.get(TOKEN_TYPE_FIELD)
-#     if current_token_type == token_type:
-#         return True
-#     raise HTTPException(
-#         status_code=status.HTTP_401_UNAUTHORIZED,
-#         detail=f"invalid token type {current_token_type!r} expected {token_type!r}",
-#     )
-
-
-# def get_user_by_token_sub(payload: dict) -> UserSchema:
-#     username: str | None = payload.get("sub")
-#     if user := users_db.get(username):
-#         return user
-#     raise HTTPException(
-#         status_code=status.HTTP_401_UNAUTHORIZED,
-#         detail="token invalid (user not found)",
-#     )
-
-
-# def get_auth_user_from_token_of_type(token_type: str):
-#     def get_auth_user_from_token(
-#         payload: dict = Depends(get_current_token_payload),
-#     ) -> UserSchema:
-#         validate_token_type(payload, token_type)
-#         return get_user_by_token_sub(payload)
-
-#     return get_auth_user_from_token
-
-
-# class UserGetterFromToken:
-#     def __init__(self, token_type: str):
-#         self.token_type = token_type
-
-#     def __call__(
-#         self,
-#         payload: dict = Depends(get_current_token_payload),
-#     ):
-#         validate_token_type(payload, self.token_type)
-#         return get_user_by_token_sub(payload)
-
-
-# # get_current_auth_user = UserGetterFromToken(ACCESS_TOKEN_TYPE)
-# get_current_auth_user = get_auth_user_from_token_of_type(ACCESS_TOKEN_TYPE)
-
-# get_current_auth_user_for_refresh = UserGetterFromToken(REFRESH_TOKEN_TYPE)
-
 
 
 
@@ -123,40 +45,24 @@ async def validate_auth_user(
 
 
 
-# def get_current_auth_user(
-#     payload: dict = Depends(get_current_token_payload),
-# ) -> UserSchema:
-#     username: str | None = payload.get("sub")
-#     if user := User.get_or_none(username):
-#         return user
-#     raise HTTPException(
-#         status_code=status.HTTP_401_UNAUTHORIZED,
-#         detail="token invalid (user not found)",
-#     )
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 @router.post("/api/token")
 async def login_for_access_token(
-    user: User = Depends(validate_auth_user)
+    request: Request,
+    user: User = Depends(validate_auth_user),
+    
 ):
+    # logger.info(request.headers)
     access_token = create_access_token(user.username)
     refresh_token = create_refresh_token(user.username)
-    return TokenInfo(
-        access_token=access_token,
-        refresh_token=refresh_token,
-    )
+    # return TokenInfo(
+    #     access_token=access_token,
+    #     refresh_token=refresh_token,
+    # )
+    logger.info(access_token)
+    return {
+        "access_token":access_token,
+        "refresh_token": refresh_token
+        }
 
 
 
@@ -174,5 +80,12 @@ async def refresh_token(username = Depends(get_current_auth_user_for_refresh)):
 
 
 @router.post("/api/token/verify")
-async def verify_token(user: User = Depends(get_current_user)):
-     return {"message": "Токен валиден"}
+async def verify_token(token:str):
+
+    token_data = decoded_jwt(token)
+    print(token_data)
+    if  token is None:
+            #Invalid Token
+            raise NoJwtException()
+     
+    return { "detail": "Token is valid" }

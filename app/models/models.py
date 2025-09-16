@@ -52,7 +52,7 @@ class User(BaseModel):
         table = "users"
     
     def __str__(self):
-        return self.username
+        return self.username, self.hash_password
 
 
 User_Pydantic = pydantic_model_creator(User, name="User", exclude=("hash_password",))
