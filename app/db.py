@@ -21,11 +21,12 @@ DB_CONFIG = {
         "models": {
             "models": [
                 "models.models",
-                # "aerich.models"  # Для миграций
+                "aerich.models"  # Для миграций
             ],
             "default_connection": "default",
         }
     },
+    "generate_schemas": False,
     "use_tz": False,
     "timezone": "UTC",
 }

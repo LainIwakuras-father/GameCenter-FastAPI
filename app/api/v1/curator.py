@@ -4,7 +4,7 @@ from schemas.curator import CuratorCreate, CuratorUpdate
 from services.curator import CuratorService
 
 
-router = APIRouter(prefix="/api/curator", tags=["curators"])
+router = APIRouter( tags=["curators"])
 
 #создаю экземпляр для взаимодействия с сервисом куратор
 curator_service = CuratorService()

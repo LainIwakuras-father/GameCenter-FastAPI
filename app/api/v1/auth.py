@@ -60,8 +60,8 @@ async def login_for_access_token(
     # )
     logger.info(access_token)
     return {
-        "access_token":access_token,
-        "refresh_token": refresh_token
+        "access":access_token,
+        "refresh": refresh_token
         }
 
 
@@ -81,7 +81,6 @@ async def refresh_token(username = Depends(get_current_auth_user_for_refresh)):
 
 @router.post("/api/token/verify")
 async def verify_token(token:str):
-
     token_data = decoded_jwt(token)
     print(token_data)
     if  token is None:

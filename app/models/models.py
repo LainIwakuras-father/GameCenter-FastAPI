@@ -6,11 +6,8 @@ from tortoise.contrib.pydantic import pydantic_model_creator
 
 
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
-
-from models.curator import Curator
-from models.player_team import PlayerTeam
 
 
 
@@ -52,7 +49,7 @@ class User(BaseModel):
         table = "users"
     
     def __str__(self):
-        return self.username, self.hash_password
+        return self.username,self.hash_password
 
 
 User_Pydantic = pydantic_model_creator(User, name="User", exclude=("hash_password",))
@@ -76,6 +73,9 @@ class Curator(BaseModel):
 
     class Meta:
         table = "curators"
+
+    def __str__(self):
+        return self.name
 
 
 
@@ -109,6 +109,8 @@ class PlayerTeam(BaseModel):
     class Meta:
         table = "player_teams"
 
+    def __str__(self):
+        return self.team_name
 
 
 class StationOrder(BaseModel):
@@ -127,12 +129,15 @@ class StationOrder(BaseModel):
         table = "station_orders"
 
 
+    def __str__(self):
+        return self.id
+
 
 
 class Station(BaseModel):
 
-    time = fields.DatetimeField(null=True)
-    points = fields.IntField(null=True,default=0)
+    time = fields.TimeDeltaField(null=True,default=timedelta(minutes=10))
+    points = fields.IntField(null=True,default=10)
     name = fields.CharField(max_length=100)
     description = fields.TextField(null=True)
     image = fields.CharField(max_length=255,null=True)
@@ -142,6 +147,9 @@ class Station(BaseModel):
 
     class Meta:
         table = "stations"
+
+    def __str__(self):
+        return self.name
 
 
 
@@ -153,5 +161,8 @@ class Task(BaseModel):
     
     class Meta:
         table = "tasks"
+
+    def __str__(self):
+        return self.name
 
 

@@ -31,3 +31,8 @@ dev = [
 system = [
     "setuptools>=80.9.0",
 ]
+
+[tool.aerich]
+tortoise_orm = "db.DB_CONFIG"
+location = "./app/migrations"
+src_folder = "./app"

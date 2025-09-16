@@ -50,7 +50,6 @@ class UserAdmin(TortoiseModelAdmin):
     list_display_links = ("id", "username")
     list_filter = ("id", "username")
     search_fields = ("username", "email", "first_name", "last_name")
-    list_per_page = 50
 
     
     formfield_overrides = {  # noqa: RUF012
