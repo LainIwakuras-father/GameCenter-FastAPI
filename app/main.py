@@ -45,7 +45,7 @@ class TaskAdmin(TortoiseModelAdmin):
 # Админка для User
 @register(User)
 class UserAdmin(TortoiseModelAdmin):
-    exclude = {"hash_password"}
+    # exclude = {"hash_password"}
     list_display = ("id", "username", "email", "is_superuser", "is_active", "created_at")
     list_display_links = ("id", "username")
     list_filter = ("id", "username")
