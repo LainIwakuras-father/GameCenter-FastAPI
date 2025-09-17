@@ -154,7 +154,7 @@ class Station(BaseModel):
     points = fields.IntField(null=True,default=10)
     name = fields.CharField(max_length=100)
     description = fields.TextField(null=True)
-    image = fields.CharField(max_length=255,null=True)
+    image = fields.CharField(max_length=500,null=True)
     assignment = fields.TextField(null=True)
     
     task = fields.ForeignKeyField("models.Task",null=True)

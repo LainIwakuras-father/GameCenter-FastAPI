@@ -6,6 +6,7 @@ import uuid
 import typing as tp
 
 import bcrypt
+from fastapi.staticfiles import StaticFiles
 
 from utils.auth_utils import verify_password, get_password_hash
 from models.models import Curator, PlayerTeam, Station, StationOrder, Task, User
@@ -25,9 +26,8 @@ from api.all_routers import routers
 from db import close_db, init_db
 from config.config import db_settings
 
-from fastadmin import register
-from fastadmin import WidgetType, TortoiseModelAdmin
-import fastadmin
+from fastadmin import register, WidgetType, TortoiseModelAdmin, action
+
 
 """
 НАСТРОЙКА АДМИНКИ КНОПОЧКИ И ОТОБРАЖЕНИЯ
@@ -71,6 +71,12 @@ class UserAdmin(TortoiseModelAdmin):
             return
         user.hash_password = get_password_hash(password.encode())
         await user.save(update_fields=("hash_password",))
+
+
+    
+    @action(description="Deactivate")
+    async def deactivate(self, ids: list[int]) -> None:
+        await self.model_cls.filter(id__in=ids).update(is_active=False)
 
 # Админка для Station
 @register(Station)
@@ -121,28 +127,6 @@ class CuratorAdmin(TortoiseModelAdmin):
     search_fields = ["name"]
     list_filter = ["station"]
     form_fields = ["user", "name", "station"]
-    
-    # # ПРАВИЛЬНАЯ настройка для отношений
-    # formfield_overrides = {
-    #     "user": {
-    #         "type": WidgetType.Select,
-    #         "attrs": {
-    #             "required": True,
-    #             "queryset": lambda: User.all(),
-    #             "display_field": "username",
-    #             "placeholder": "Выберите пользователя"
-    #         }
-    #     },
-    #     "station": {
-    #         "type": WidgetType.Select,
-    #         "attrs": {
-    #             "required": False,
-    #             "queryset": lambda: Station.all(),
-    #             "display_field": "name",
-    #             "placeholder": "Выберите станцию"
-    #         }
-    #     },
-    # }
 
 
 
@@ -166,28 +150,6 @@ class CuratorAdmin(TortoiseModelAdmin):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# async def test():
-      
-#     await User.create()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
@@ -238,6 +200,7 @@ app.include_router(router=routers)
 
 app.mount("/admin", admin_app)
 
+app.mount("/static", StaticFiles(directory="image"), name="static")
 
 
 if __name__ == "__main__":

@@ -16,6 +16,10 @@ async def create_superuser():
                 is_superuser=True
                 ) 
             logger.info("SuperUser created! if not exist")
+
+
+
+        
     except:
          logger.error("db connection error")
          raise
