@@ -1,6 +1,6 @@
 from typing import Any, Dict, List, Optional
 from models.models import Curator
-from models.user import User
+from models.models import User
 from repositories.base import BaseRepository
 
 

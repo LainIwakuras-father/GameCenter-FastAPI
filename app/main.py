@@ -194,17 +194,14 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     try:         
         await init_db()
         logger.info("создаю БД")
-        user = await User.get_or_none(username="admin")
-        if not user:
-            hash_password = get_password_hash("admin")
-            await User.create(username="admin", hash_password=hash_password, is_superuser=True)
-            logger.info("создаю админа если его не было")
-                # from tortoise import Tortoise
-                # print(Tortoise.apps)
+        # user = await User.get_or_none(username="admin")
+        # if not user:
+        #     hash_password = get_password_hash("admin")
+        #     await User.create(username="admin", hash_password=hash_password, is_superuser=True)
+        #     logger.info("создаю админа если его не было")
+        #         # from tortoise import Tortoise
+        #         # print(Tortoise.apps)
 
-        users = await User.all()
-        for user in users:
-            logger.warning(user.hash_password)
         yield
 
     except Exception:
@@ -244,4 +241,4 @@ app.mount("/admin", admin_app)
 
 if __name__ == "__main__":
     logger.info("Server is running....")
-    uvicorn.run("main:app", host="0.0.0.0", port=80)
+    uvicorn.run("main:app", host="0.0.0.0", port=8000)
