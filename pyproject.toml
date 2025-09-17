@@ -1,9 +1,9 @@
 [project]
 name = "gamecenter-fastapi"
-version = "0.1.0"
+version = "1.0.0"
 description = "gamecenter for SpbSUT meetup"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 dependencies = [
     "aerich>=0.9.1",
     "asyncpg>=0.30.0",
