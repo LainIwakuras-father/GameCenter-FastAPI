@@ -23,7 +23,7 @@ import uvicorn
 
 from api.all_routers import routers
 from db import close_db, init_db
-
+from config.config import db_settings
 
 from fastadmin import register
 from fastadmin import WidgetType, TortoiseModelAdmin
@@ -194,13 +194,14 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     try:         
         await init_db()
         logger.info("создаю БД")
-        # user = await User.get_or_none(username="admin")
-        # if not user:
-        #     hash_password = get_password_hash("admin")
-        #     await User.create(username="admin", hash_password=hash_password, is_superuser=True)
-        #     logger.info("создаю админа если его не было")
-        #         # from tortoise import Tortoise
-        #         # print(Tortoise.apps)
+        # if db_settings
+        # # user = await User.get_or_none(username="admin")
+        # # if not user:
+        # #     hash_password = get_password_hash("admin")
+        # #     await User.create(username="admin", hash_password=hash_password, is_superuser=True)
+        # #     logger.info("создаю админа если его не было")
+        # #         # from tortoise import Tortoise
+        # #         # print(Tortoise.apps)
 
         yield
 

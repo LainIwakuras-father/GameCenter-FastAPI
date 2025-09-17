@@ -10,8 +10,8 @@ from datetime import datetime, timedelta
 
 
 
-
-
+from utils.auth_utils import get_password_hash
+from config.logging import app_logger as logger
 
 
 class BaseModel(Model):
@@ -49,14 +49,28 @@ class User(BaseModel):
         table = "users"
     
     def __str__(self):
-        return self.username,self.hash_password
+        return self.username
+    
+    # @classmethod
+    # async def create_superuser(cls,username:str,password:str|bytes):
+    #     if not cls.filter(username=username).exists():
+    #         await cls.create(
+    #             username=username,
+    #             hash_password=get_password_hash(password),
+    #             is_superuser=True
+    #         )
+    #         logger.info("создаю админа если его не было")
+
+
+
+
+
+
 
 
 User_Pydantic = pydantic_model_creator(User, name="User", exclude=("hash_password",))
 UserIn_Pydantic = pydantic_model_creator(User, name="UserIn", exclude_readonly=True)
 UserAuth_Pydantic = pydantic_model_creator(User, name="UserAuth", include=("id", "username", "email"))
-
-
 
 class Curator(BaseModel):
     id = fields.IntField(pk=True)
