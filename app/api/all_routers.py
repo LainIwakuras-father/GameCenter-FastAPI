@@ -1,16 +1,7 @@
-from api.v1 import (
-    auth,
-    curator,
-    task,
-    player_team,
-    station,
-    station_order,
-    user
-    )
+from api.v1 import auth, curator, task, player_team, station, station_order, user
 
 
 from fastapi import APIRouter
-
 
 
 routers = APIRouter()
@@ -22,8 +13,7 @@ all_routers = [
     player_team.router,
     station.router,
     station_order.router,
-    user.router
-
+    user.router,
 ]
 
 for router in all_routers:

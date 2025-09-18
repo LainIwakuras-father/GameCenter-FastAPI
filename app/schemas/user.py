@@ -1,5 +1,4 @@
-from pydantic import BaseModel, ConfigDict, EmailStr, Field
-
+from pydantic import BaseModel, Field
 
 
 class UserLoginSchema(BaseModel):

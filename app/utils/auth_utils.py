@@ -1,10 +1,9 @@
 from datetime import datetime, timedelta, timezone
 from passlib.context import CryptContext
-from fastapi import  HTTPException,  status
+from fastapi import HTTPException, status
 from jwt import PyJWTError, decode, encode
 
 from config.config import auth_settings
-from utils.exception import NoJwtException
 
 auth_data = auth_settings.get_auth_data
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -26,24 +25,16 @@ def create_encoded_jwt(
     to_encode.update(
         exp=expire,
         iat=now,
-        
-        )
+    )
 
-    encoded = encode(
-        to_encode,
-        secret_key,
-        algorithm=algorithm
-        )
+    encoded = encode(to_encode, secret_key, algorithm=algorithm)
     return encoded
-
-
-
 
 
 def decoded_jwt(
     token: str | bytes,
     secret_key: str = auth_data["secret_key"],
-    algorithm: str = auth_data["algorithm"]
+    algorithm: str = auth_data["algorithm"],
 ):
     try:
         decoded = decode(token, secret_key, algorithm)
@@ -54,36 +45,12 @@ def decoded_jwt(
         )
 
 
-
-
-def get_password_hash(
-        password: str | bytes
-) -> str:
+def get_password_hash(password: str | bytes) -> str:
     return pwd_context.hash(password)
 
-def verify_password(
-        plain_password: str | bytes,
-        hashed_password: str | bytes
-) -> bool:
-    return pwd_context.verify(
-        plain_password,
-        hashed_password)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+def verify_password(plain_password: str | bytes, hashed_password: str | bytes) -> bool:
+    return pwd_context.verify(plain_password, hashed_password)
 
 
 # def get_token(request: Request):

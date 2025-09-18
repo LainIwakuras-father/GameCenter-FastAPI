@@ -14,7 +14,9 @@ class CuratorRepository(BaseRepository):
     async def get_by_id_with_user(self, id: int) -> Optional[Curator]:
         return await Curator.filter(id=id).prefetch_related("user").first()
 
-    async def create(self, user_data: Dict[str, Any], curator_data: Dict[str, Any]) -> Curator:
+    async def create(
+        self, user_data: Dict[str, Any], curator_data: Dict[str, Any]
+    ) -> Curator:
         user = await User.create(**user_data)
         curator_data["user_id"] = user.id
-        return await self.create(curator_data) 
+        return await self.create(curator_data)

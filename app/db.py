@@ -14,14 +14,14 @@ DB_CONFIG = {
                 "database": settings.DB_NAME,
                 "minsize": 1,
                 "maxsize": 10,
-            }
+            },
         }
     },
     "apps": {
         "models": {
             "models": [
                 "models.models",
-                "aerich.models"  # Для миграций
+                "aerich.models",  # Для миграций
             ],
             "default_connection": "default",
         }
@@ -30,6 +30,7 @@ DB_CONFIG = {
     "use_tz": False,
     "timezone": "UTC",
 }
+ # "generate_schemas": False,
 
 async def init_db():
     """

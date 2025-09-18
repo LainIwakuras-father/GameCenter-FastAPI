@@ -1,10 +1,10 @@
 # Station schemas
 from datetime import datetime
 from typing import Optional
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel
 
 from schemas.base import BaseSchema
-from schemas.task import Task
+
 
 class StationBase(BaseModel):
     time: Optional[datetime] = None
@@ -14,6 +14,7 @@ class StationBase(BaseModel):
     image: Optional[str] = None
     assignment: Optional[str] = None
     task_id: Optional[int] = None
+
 
 class StationCreate(BaseSchema):
     points: Optional[int] = 0
@@ -28,12 +29,12 @@ class StationUpdate(StationBase):
     pass
 
 
-
 # Схемы с отношениями
 class TaskNested(BaseSchema):
     id: int
     name: Optional[str] = None
     question: Optional[str] = None
+
 
 class StationWithRelations(StationBase):
     id: int

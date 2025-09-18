@@ -1,9 +1,7 @@
 from datetime import timedelta
 
-from models.models import User
 from config.config import auth_settings
 from utils.auth_utils import create_encoded_jwt
-
 
 
 TOKEN_TYPE_FIELD = "type"
@@ -29,10 +27,8 @@ def create_jwt(
 def create_access_token(username) -> str:
     jwt_payload = {
         # subject
-
         "username": username,
         # "email": user.email,
-        
         # "logged_in_at"
     }
     return create_jwt(
@@ -50,5 +46,5 @@ def create_refresh_token(username) -> str:
     return create_jwt(
         token_type=REFRESH_TOKEN_TYPE,
         token_data=jwt_payload,
-        expire_timedelta=timedelta(days=auth_settings.REFRESH_TOKEN_EXPIRE_MINUTES)
+        expire_timedelta=timedelta(days=auth_settings.REFRESH_TOKEN_EXPIRE_MINUTES),
     )

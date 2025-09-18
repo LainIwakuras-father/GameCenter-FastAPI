@@ -1,7 +1,6 @@
 # PlayerTeam schemas
 from datetime import datetime
 from typing import Optional
-from pydantic import BaseModel
 
 from schemas.base import BaseSchema
 
@@ -14,19 +13,23 @@ class PlayerTeamBase(BaseSchema):
     current_station: int = 1
     user_id: int
 
+
 class PlayerTeamCreate(PlayerTeamBase):
     pass
 
+
 class PlayerTeamUpdate(PlayerTeamBase):
-   pass
+    pass
 
 
 class UserNested(BaseSchema):
     id: int
     username: str
 
+
 class StationOrderNested(BaseSchema):
     id: int
+
 
 class PlayerTeamWithRelations(PlayerTeamBase):
     id: int

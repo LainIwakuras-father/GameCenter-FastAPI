@@ -11,19 +11,22 @@ class StationOrderBase(BaseModel):
     third_id: Optional[int] = None
     fourth_id: Optional[int] = None
     fifth_id: Optional[int] = None
-    
+
 
 class StationOrderCreate(StationOrderBase):
     pass
 
+
 class StationOrderUpdate(StationOrderBase):
     pass
+
 
 # Схемы с отношениями
 class StationNested(BaseSchema):
     id: int
     name: str
     description: Optional[str] = None
+
 
 class StationOrderWithRelations(StationOrderBase):
     id: int

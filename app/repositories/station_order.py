@@ -1,6 +1,3 @@
-from tortoise.expressions import Q
-from typing import Any, Dict, List, Optional
-from models.models import Station
 from models.models import StationOrder
 from repositories.base import BaseRepository
 
@@ -8,16 +5,6 @@ from repositories.base import BaseRepository
 class StationOrderRepository(BaseRepository):
     def __init__(self):
         super().__init__(StationOrder)
-
-
-
-
-
-
-
-
-
-
 
     # async def get_all_with_relations(self, skip: int = 0, limit: int = 100) -> List[StationOrder]:
     #     """Получить все записи StationOrder с загруженными связанными станциями"""
@@ -35,10 +22,10 @@ class StationOrderRepository(BaseRepository):
     # async def get_station_orders_by_station(self, station_id: int) -> List[StationOrder]:
     #     """Найти все StationOrder, где станция присутствует в любом из полей"""
     #     return await StationOrder.filter(
-    #         Q(first_id=station_id) | Q(second_id=station_id) | 
-    #         Q(third_id=station_id) | Q(fourth_id=station_id) | 
-    #         Q(fifth_id=station_id) | Q(sixth_id=station_id) | 
-    #         Q(seventh_id=station_id) | Q(eighth_id=station_id) | 
+    #         Q(first_id=station_id) | Q(second_id=station_id) |
+    #         Q(third_id=station_id) | Q(fourth_id=station_id) |
+    #         Q(fifth_id=station_id) | Q(sixth_id=station_id) |
+    #         Q(seventh_id=station_id) | Q(eighth_id=station_id) |
     #         Q(ninth_id=station_id) | Q(tenth_id=station_id)
     #     ).prefetch_related(
     #         "first", "second", "third", "fourth", "fifth",
@@ -59,7 +46,7 @@ class StationOrderRepository(BaseRepository):
     #     station_order = await self.get_by_id_with_relations(id)
     #     if not station_order:
     #         return []
-        
+
     #     # Собираем все станции в правильном порядке
     #     stations = [
     #         station_order.first, station_order.second, station_order.third,
@@ -67,6 +54,6 @@ class StationOrderRepository(BaseRepository):
     #         station_order.seventh, station_order.eighth, station_order.ninth,
     #         station_order.tenth
     #     ]
-        
+
     #     # Фильтруем None значения (не заданные станции)
     #     return [station for station in stations if station is not None]

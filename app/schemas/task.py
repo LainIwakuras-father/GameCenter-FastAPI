@@ -1,6 +1,5 @@
 # Task schemas
 from typing import Optional
-from pydantic import BaseModel, ConfigDict
 
 from schemas.base import BaseSchema
 
@@ -10,12 +9,14 @@ class TaskBase(BaseSchema):
     question: Optional[str] = None
     answer: Optional[str] = None
 
+
 class TaskCreate(TaskBase):
     pass
+
 
 class TaskUpdate(TaskBase):
     pass
 
+
 class Task(TaskBase):
     id: int
-   

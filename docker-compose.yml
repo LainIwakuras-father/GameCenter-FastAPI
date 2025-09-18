@@ -1,7 +1,7 @@
 services:
   db:
       image: postgres:15
-      container_name: db_gamecenter
+      container_name: db-post_gamecenter
       command: -p 5432
       expose:
         - 5432
@@ -18,7 +18,7 @@ services:
 
 
   web:
-        container_name: web_gamecenter
+        container_name: app_gamecenter
         build: .
         command: uv run uvicorn app.main:app --host 0.0.0.0 --port 80
         env_file:
@@ -26,6 +26,9 @@ services:
         ports:
         # слева со стороны меня справа со стороны докера(я кстати прикола не понял там что фаерфол стоит на другие порты кроме 80???)
           - 8000:80
+        # volumes:
+        # - .:/backend
+        # - ./static:/backend/static
         depends_on:
           - db
         networks:
