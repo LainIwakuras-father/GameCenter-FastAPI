@@ -30,10 +30,19 @@ docker-compose exec web uv run app/create_stations.py
 ```bash
 docker-compose exec web uv run app/create_tasks.py
 ```
-7. создать 40 кураторов  
+7. создать 10 кураторов  
 ```bash
-docker-compose exec web uv run app/create_users.py
+docker-compose exec web uv run app/create_curators.py
 ```
+8. cоздать 10 капитанов 
+```bash
+docker-compose exec web uv run app/create_player_teams.py
+```
+
+# В ПРОЦЕССЕ РАЗРАБОТКИ 
+ - bash-скрипт накатать один чтоб эти команды не прописывать для вноса данных В БД
+ - деплой на https://gamecenter.ru 
+
 ## Документация и Админка
 
 - Документация http://localhost:8000/docs

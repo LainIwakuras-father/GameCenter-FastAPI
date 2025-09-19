@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Request, status
+from fastapi import APIRouter, Depends, HTTPException, Request, Response, status
 from pydantic import BaseModel
 
 
@@ -16,8 +16,6 @@ router = APIRouter(tags=["auth"])
 
 class TokenInfo(BaseModel):
     access: str
-    refresh: str | None = None
-    # token_type: str = "Bearer"
 
 
 async def validate_auth_user(user_data: UserLoginSchema) -> User:
@@ -39,18 +37,28 @@ async def validate_auth_user(user_data: UserLoginSchema) -> User:
 
 @router.post("/api/token",response_model=TokenInfo)
 async def login_for_access_token(
+    response: Response,
     user: User = Depends(validate_auth_user),
 ):
-    # logger.info(request.headers)
-    access_token = create_access_token(user.username)
-    refresh_token = create_refresh_token(user.username)
-    return TokenInfo(
-        access=access_token,
-        refresh=refresh_token,
-    )
-    # logger.info(access_token)
-    # return {"access": access_token, "refresh": refresh_token}
+    try:
+        access_token = create_access_token(user.username)
+        refresh_token = create_refresh_token(user.username)
+        logger.info("Created access and refresh token")
+        response.set_cookie(
+            key="users_refresh_token",
+            value=refresh_token,
+            httponly=True,
+            max_age=1 *24 * 60 * 60*1000,#1 day age cookie
+            )
+        logger.info("Set refresh token in cookie, key='users_refresh_token'")
+        
+        return TokenInfo(
+            access=access_token,
+        )
+    except:
 
+    
+    
 
 @router.post(
     "/api/token/refresh", response_model=TokenInfo, response_model_exclude_none=True
@@ -61,29 +69,5 @@ async def refresh_token(username=Depends(get_current_auth_user_for_refresh)):
     return TokenInfo(
         access=new_access_token, 
     )
-
-"""
-КОСТЫЛ ЕБАННЫЙ -->
-"""
-# @router.post("/api/token/verify")
-# async def verify_token(token: str):
-#     token_data = decoded_jwt(token)
-#     print(token_data)
-#     if token is None:
-#         # Invalid Token
-#         raise NoJwtException()
-
-#     return {"detail": "Token is valid"}
-
-
-@router.post("/api/token/verify")
-async def verify_token(user:User = Depends(IsAuthenticated)):
-    # token_data = decoded_jwt(token)
-    # print(token_data)
-    # if token is None:
-    #     # Invalid Token
-    #     raise NoJwtException()
-
-    return {"detail": "Token is valid"}
 
 
