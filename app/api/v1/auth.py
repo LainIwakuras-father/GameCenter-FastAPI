@@ -55,8 +55,9 @@ async def login_for_access_token(
         return TokenInfo(
             access=access_token,
         )
-    except:
-
+    except Exception as e:
+        logger.error(f"Bad response: {e}")
+        raise 
     
     
 
