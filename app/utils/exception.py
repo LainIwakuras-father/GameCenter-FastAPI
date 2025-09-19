@@ -53,6 +53,11 @@ class RefreshTokenRequired(HTTPException):
         )
 
 
+ImageUploadException = HTTPException(
+    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Ошибка загрузки изображения"
+)
+
+
 UserAlreadyExistsException = HTTPException(
     status_code=status.HTTP_409_CONFLICT, detail="Пользователь уже существует"
 )

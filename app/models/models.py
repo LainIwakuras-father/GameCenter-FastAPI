@@ -46,11 +46,11 @@ class User(BaseModel):
     #         logger.info("создаю админа если его не было")
 
 
-User_Pydantic = pydantic_model_creator(User, name="User", exclude=("hash_password",))
-UserIn_Pydantic = pydantic_model_creator(User, name="UserIn", exclude_readonly=True)
-UserAuth_Pydantic = pydantic_model_creator(
-    User, name="UserAuth", include=("id", "username", "email")
-)
+# User_Pydantic = pydantic_model_creator(User, name="User", exclude=("hash_password",))
+# UserIn_Pydantic = pydantic_model_creator(User, name="UserIn", exclude_readonly=True)
+# UserAuth_Pydantic = pydantic_model_creator(
+#     User, name="UserAuth", include=("id", "username", "email")
+# )
 
 
 class Curator(BaseModel):
@@ -130,6 +130,7 @@ class StationOrder(BaseModel):
 
     def __str__(self):
         return self.id
+        # return   f"{self.first} {self.second} {self.third} {self.fourth} {self.fifth} {self.sixth} {self.seventh} {self.eighth} {self.ninth} {self.tenth}"
 
 
 class Station(BaseModel):

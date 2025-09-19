@@ -3,12 +3,15 @@ from dotenv import load_dotenv
 from pathlib import Path
 from fastadmin.settings import Settings as AdminSettings
 
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
-ENV_PATH = BASE_DIR / ".env"
+
+# ENV_PATH = BASE_DIR / ".env"
 # UPLOAD_FOLDER = Path(f"uploads/images")
 # UPLOAD_FOLDER.mkdir(parents=True, exist_ok=True)
 # Загружаем переменные окружения
-
+ROOT_DIR = Path(__file__).parents[2]
+STATIC_DIR = ROOT_DIR.joinpath('static')
+APP_DIR = ROOT_DIR.joinpath('app')
+ENV_PATH = ROOT_DIR.joinpath('.env')
 
 load_dotenv(ENV_PATH)
 
@@ -53,7 +56,7 @@ class AUTH_Settings:
             "expire_minutes": self.ACCESS_TOKEN_EXPIRE_MINUTES,
         }
 
-
+# AdminSettings
 class ADMIN_Settings(AdminSettings):
     # class ADMIN_Settings:
     ADMIN_USER_MODEL: str = os.getenv("ADMIN_USER_MODEL", "User")
@@ -64,3 +67,10 @@ class ADMIN_Settings(AdminSettings):
 db_settings = DBSettings()
 auth_settings = AUTH_Settings()
 admin_settings = ADMIN_Settings()
+
+
+
+# if __name__ == "__main__":
+#     print(ROOT_DIR)
+#     print(APP_DIR)
+#     print(ENV_FILE_PATH)

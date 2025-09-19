@@ -1,9 +1,9 @@
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
-from base64 import b64encode
-import io
+
+
 import os
-import random
+
 import uuid
 
 
@@ -11,12 +11,14 @@ import typing as tp
 
 from fastapi.staticfiles import StaticFiles
 
-from utils.upload_files import save_upload_media
+from utils.random_station import shuffle_stations
+from utils.exception import ImageUploadException
+from utils.upload_files import convert_base64_to_file, save_upload_media
 from utils.auth_utils import verify_password, get_password_hash
 from models.models import Curator, PlayerTeam, Station, StationOrder, Task, User
 
 
-from fastapi import FastAPI, HTTPException, UploadFile
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastadmin import fastapi_app as admin_app
 
@@ -27,7 +29,7 @@ import uvicorn
 
 from api.all_routers import routers
 from db import close_db, init_db
-from config.config import db_settings
+from config.config import STATIC_DIR, db_settings
 from fastadmin import register, WidgetType, TortoiseModelAdmin, action
 
 
@@ -35,8 +37,6 @@ from fastadmin import register, WidgetType, TortoiseModelAdmin, action
 НАСТРОЙКА АДМИНКИ КНОПОЧКИ И ОТОБРАЖЕНИЯ
 К моему сожалению, не понимаю почему , но работает только если эта часть кода будет в файле main.py
 """
-
-
 # Админка для Task
 @register(Task)
 class TaskAdmin(TortoiseModelAdmin):
@@ -53,10 +53,11 @@ class UserAdmin(TortoiseModelAdmin):
     list_display = (
         "id",
         "username",
-        "email",
+        "first_name",
+        "last_name",
         "is_superuser",
         "is_active",
-        "created_at",
+      
     )
     list_display_links = ("id", "username")
     list_filter = ("id", "username")
@@ -65,6 +66,13 @@ class UserAdmin(TortoiseModelAdmin):
     formfield_overrides = {  # noqa: RUF012
         "hash_password": (WidgetType.PasswordInput, {"passwordModalForm": False}),
     }
+
+
+    actions = [
+        *TortoiseModelAdmin.actions,
+        "deactivate",
+        "activate",
+    ]
 
     async def authenticate(
         self, username: str, password: str
@@ -87,57 +95,68 @@ class UserAdmin(TortoiseModelAdmin):
     async def deactivate(self, ids: list[int]) -> None:
         await self.model_cls.filter(id__in=ids).update(is_active=False)
 
+    @action(description="Activate")
+    async def activate(self, ids: list[int]) -> None:
+        await self.model_cls.filter(id__in=ids).update(is_active=True)
+
 
 # Админка для Station
 @register(Station)
 class StationAdmin(TortoiseModelAdmin):
-    list_display = ["id", "name", "points", "time", "task"]
+    list_display = ["id", "name", "points", "time", "task", "image", "assignment"]
     list_display_links = ["id", "name"]
     search_fields = [
         "name",
     ]
     list_filter = ["points"]
-    formfield_overrides = {  # noqa: RUF012
-        "time": (WidgetType.TimePicker,{"required": False}),
-        "image": (WidgetType.Upload, {"required": False})
-    }
 
-    async def orm_save_upload_field(self, obj: tp.Any, field: str, base64: str) -> None:
-        # convert base64 to bytes, upload to s3/filestorage, get url and save or save base64 as is to db (don't recomment it)
-        """
-        Переопределяем метод сохранения загруженных файлов
-        """
-        if field != "image":
-        # Для других полей используем стандартное поведение
-            return await super().orm_save_upload_field(obj, field, base64)
-        try:
+    """
+    ОБРАБОТКА ФОТОК ЗАГРУЖЕННЫХ ЧЕРЕЗ АДМИНКУ С СОХРАНИЕМ ОТНОСИТЕЛЬНОГО ПУТИ В БАЗУ ДАННЫХ
+    """
+    # formfield_overrides = {  # noqa: RUF012
+    #     "time": (WidgetType.TimePicker,{"required": False}),
+    #     "image": (WidgetType.Upload, {"required": False})
+    # }
 
-            # Декодируем base64
-            if "," in base64:
-                # Убираем префикс data:image/...;base64,
-                base64_data = base64.split(",")[1]
-             # Преобразуем строку в байты перед декодированием
-            file_data = b64encode(base64_data.encode("utf-8"))
+    # async def orm_save_upload_field(self, obj: tp.Any, field: str, base64: str) -> None:
+    #     # convert base64 to bytes, upload to s3/filestorage, get url and save or save base64 as is to db (don't recomment it)
+    #     """
+    #     Переопределяем метод сохранения загруженных файлов
+    #     """
+    #     if field != "image":
+    #     # Для других полей используем стандартное поведение
+    #         return await super().orm_save_upload_field(obj, field, base64)
+    #     try:
+    #         decode_file, format_file = await convert_base64_to_file(base64)
             
-            # Создаем временный UploadFile объект
-            file = UploadFile(
-                filename=f"{random.randint(1,100)}.jpg",
-                file=io.BytesIO(file_data),
-                content_type="image/jpeg"
-            )
-            image_path = await save_upload_media(file, upload_to="images", )
+    #         image_path = await save_upload_media(
+    #             file=decode_file,
+    #             file_format=format_file
+    #         )
 
-            setattr(obj, field, image_path)
-            await obj.save(update_fields=(field,))
+    #         setattr(obj, field, image_path)
+    #         await obj.save(update_fields=(field,))
 
-        except Exception as e:
-            logger.error(f"Error saving {field} to db: {e}")
-            raise HTTPException(status_code=500, detail="Error saving image")
+    #     except Exception as e:
+    #         logger.error(f"Error saving {field} to db: {e}")
+    #         ImageUploadException()
 
 # Админка для StationOrder
 @register(StationOrder)
 class StationOrderAdmin(TortoiseModelAdmin):
-    list_display = ["id"]
+    list_display = [
+        "id",
+        "first",
+        "second",
+        "third",
+        "fourth",
+        "fifth",
+        "sixth",
+        "seventh",
+        "eighth",
+        "ninth",
+        "tenth",        
+    ]
     list_filter = [
         "first",
         "second",
@@ -155,9 +174,77 @@ class StationOrderAdmin(TortoiseModelAdmin):
 # Админка для PlayerTeam
 @register(PlayerTeam)
 class PlayerTeamAdmin(TortoiseModelAdmin):
-    list_display = ["id", "team_name", "score", "current_station"]
+    list_display = ["id", "team_name","start_time", "score", "current_station","stations"]
     search_fields = ["team_name"]
     list_filter = ["score", "current_station"]
+
+
+    formfield_overrides = {  # noqa: RUF012
+        "start_time": (WidgetType.DateTimePicker, {"required": False}),
+    }
+
+
+    actions =(
+        *TortoiseModelAdmin.actions,
+        "set_random_stations"
+    )
+    @action(description="определить случайные станции команде и сохранить")
+    async def set_random_stations(self, ids: list[int]):
+        await shuffle_stations(ids)
+        # return HTTPException(
+        #     status_code=200,
+        #     details=details
+        # )
+
+
+
+        # """
+        # Устанавливает случайный порядок станций для выбранных команд
+        # """
+        # # Получаем все доступные станции
+        # all_stations = await Station.all()
+        
+        # if len(all_stations) < 10:
+        #     raise ValueError("Недостаточно станций для создания маршрута. Нужно как минимум 10 станций.")
+        
+        # # Получаем выбранные команды
+        # teams = await PlayerTeam.filter(id__in=ids).prefetch_related("stations")
+        
+        # for team in teams:
+        #     # Выбираем 10 случайных станций и перемешиваем
+        #     random_stations = random.sample(all_stations, 10)
+        #     random.shuffle(random_stations)
+            
+        #     # Создаем новый порядок станций
+        #     station_order = await StationOrder.create(
+        #         first=random_stations[0],
+        #         second=random_stations[1],
+        #         third=random_stations[2],
+        #         fourth=random_stations[3],
+        #         fifth=random_stations[4],
+        #         sixth=random_stations[5],
+        #         seventh=random_stations[6],
+        #         eighth=random_stations[7],
+        #         ninth=random_stations[8],
+        #         tenth=random_stations[9],
+        #     )
+            
+        #     # Обновляем команду
+        #     team.stations = station_order
+        #     team.current_station = random_stations[0]  # Устанавливаем первую станцию как текущую
+            
+        #     # Сбрасываем прогресс команды
+        #     team.score = 0
+        #     team.start_time = datetime.now()  # Если у вас есть поле для времени начала
+            
+        #     await team.save()
+        
+        # return f"Случайные станции установлены для {len(teams)} команд"
+
+
+
+
+
 
 
 # Админка для Curator
@@ -173,6 +260,7 @@ class CuratorAdmin(TortoiseModelAdmin):
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     try:
         await init_db()
+        #эту часть кода переместить в db.py
         logger.info("создаю БД")
         if db_settings.ENVIRONMENT == "development":
             user = await User.get_or_none(username="admin")
@@ -215,9 +303,9 @@ app.include_router(router=routers)
 
 app.mount("/admin", admin_app)
 
-path = os.path.join(os.path.dirname(__file__), "static")
-os.makedirs(path, exist_ok=True)
-app.mount("/static", StaticFiles(directory="app/static"), name="static")
+
+os.makedirs(STATIC_DIR, exist_ok=True)
+app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 
 if __name__ == "__main__":

@@ -5,7 +5,7 @@ from pydantic import BaseModel
 from config.logging import app_logger as logger
 from utils.exception import NoJwtException
 from schemas.user import UserLoginSchema
-from utils.dependencies import get_current_auth_user_for_refresh
+from utils.dependencies import get_current_auth_user_for_refresh ,IsAuthenticated
 from utils.helpers import create_access_token, create_refresh_token
 from models.models import User
 from utils.auth_utils import decoded_jwt, verify_password
@@ -15,9 +15,9 @@ router = APIRouter(tags=["auth"])
 
 
 class TokenInfo(BaseModel):
-    access_token: str
-    refresh_token: str | None = None
-    token_type: str = "Bearer"
+    access: str
+    refresh: str | None = None
+    # token_type: str = "Bearer"
 
 
 async def validate_auth_user(user_data: UserLoginSchema) -> User:
@@ -37,20 +37,19 @@ async def validate_auth_user(user_data: UserLoginSchema) -> User:
     return user
 
 
-@router.post("/api/token")
+@router.post("/api/token",response_model=TokenInfo)
 async def login_for_access_token(
-    request: Request,
     user: User = Depends(validate_auth_user),
 ):
     # logger.info(request.headers)
     access_token = create_access_token(user.username)
     refresh_token = create_refresh_token(user.username)
-    # return TokenInfo(
-    #     access_token=access_token,
-    #     refresh_token=refresh_token,
-    # )
-    logger.info(access_token)
-    return {"access": access_token, "refresh": refresh_token}
+    return TokenInfo(
+        access=access_token,
+        refresh=refresh_token,
+    )
+    # logger.info(access_token)
+    # return {"access": access_token, "refresh": refresh_token}
 
 
 @router.post(
@@ -60,16 +59,31 @@ async def refresh_token(username=Depends(get_current_auth_user_for_refresh)):
     # отдать новый токен доступа если не истек рефреш токен
     new_access_token = create_access_token(username)
     return TokenInfo(
-        access_token=new_access_token,
+        access=new_access_token, 
     )
+
+"""
+КОСТЫЛ ЕБАННЫЙ -->
+"""
+# @router.post("/api/token/verify")
+# async def verify_token(token: str):
+#     token_data = decoded_jwt(token)
+#     print(token_data)
+#     if token is None:
+#         # Invalid Token
+#         raise NoJwtException()
+
+#     return {"detail": "Token is valid"}
 
 
 @router.post("/api/token/verify")
-async def verify_token(token: str):
-    token_data = decoded_jwt(token)
-    print(token_data)
-    if token is None:
-        # Invalid Token
-        raise NoJwtException()
+async def verify_token(user:User = Depends(IsAuthenticated)):
+    # token_data = decoded_jwt(token)
+    # print(token_data)
+    # if token is None:
+    #     # Invalid Token
+    #     raise NoJwtException()
 
     return {"detail": "Token is valid"}
+
+

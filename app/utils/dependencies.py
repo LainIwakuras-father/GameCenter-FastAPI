@@ -34,11 +34,20 @@ class TokenBearer(HTTPBearer):
             raise NoJwtException()
 
         self.verify_token_data(token_data)
+        # await self.expire_token(token_data)
 
         return token_data
 
     def verify_token_data(self, token_dict):
         raise NotImplementedError("Please Override this method in child classes")
+    
+    # #проверка срока жизни токена 
+    # async def expire_token(self, token_data: dict):
+    #     if token_data["exp"] < datetime.now():
+    #         raise HTTPException(
+    #             status_code=status.HTTP_401_UNAUTHORIZED,
+    #             detail="Токен истек",
+    #         )
 
 
 class AccessTokenBearer(TokenBearer):
@@ -58,6 +67,7 @@ async def get_current_auth_user_for_refresh(
 ) -> User:
     try:
         expiry_timestamp = token_details["exp"]
+        # Проверка на истекший токен обновления
         if datetime.fromtimestamp(expiry_timestamp) > datetime.now():
             username = token_details["sub"]
             return username
@@ -69,6 +79,13 @@ async def IsAuthenticated(
     token_details: HTTPAuthorizationCredentials = Depends(AccessTokenBearer()),
 ) -> User:
     try:
+        # Проверка на истекший токен доступа
+        expiry_timestamp = token_details["exp"]
+        if datetime.fromtimestamp(expiry_timestamp) < datetime.now():
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Токен истек",
+            )
         username = token_details["username"]
 
         if username is None:

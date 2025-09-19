@@ -39,6 +39,7 @@ def decoded_jwt(
     try:
         decoded = decode(token, secret_key, algorithm)
         return decoded
+    
     except PyJWTError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="Токен невалидный"

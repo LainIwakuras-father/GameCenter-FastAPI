@@ -1,10 +1,10 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 
 from schemas.curator import CuratorCreate, CuratorUpdate
 from services.curator import CuratorService
+from utils.dependencies import (IsAuthenticated)
 
-
-router = APIRouter(tags=["curators"])
+router = APIRouter(tags=["curators"],dependencies=[Depends(IsAuthenticated)])
 
 # создаю экземпляр для взаимодействия с сервисом куратор
 curator_service = CuratorService()

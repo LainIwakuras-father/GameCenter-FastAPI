@@ -26,9 +26,8 @@ services:
         ports:
         # слева со стороны меня справа со стороны докера(я кстати прикола не понял там что фаерфол стоит на другие порты кроме 80???)
           - 8000:80
-        # volumes:
-        # - .:/backend
-        # - ./static:/backend/static
+        volumes:
+          - ./static:/backend/static
         depends_on:
           - db
         networks:

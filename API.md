@@ -2,6 +2,7 @@
 #### Get all curators
 endpoint: /api/curator  
 method: GET
+Response: "List[Curator]"
 
 #### Get curator by id
 endpoint: /api/curator/{id}
@@ -43,6 +44,17 @@ method: DELETE
 #### Add score to player team
 endpoint: /api/playerteam/{id}/add_score
 method: POST
+Request:
+    query id:int
+    json: {
+        "score": int
+    }
+Response:{
+    score:int
+    current_station:int
+
+}
+
 
 #### Get top 3 player teams by score
 endpoint: /api/playerteam/get_top_3/
@@ -119,11 +131,26 @@ method: DELETE
 #### Get JWT
 endpoint: /api/token
 method: POST
+Response: {
+    "access": str
+    "refresh":str
+}
 
 #### Refresh JWT
 endpoint: /api/token/refresh
 method: POST
-
+Request: Headers{
+    Authorizated Bearer "refresh_token"
+}
+Response: {
+    "access": str
+}
 #### Verify JWT
 endpoint: /api/token/verify
 method: POST
+Request: Headers{
+    Authorizated Bearer "access_token"
+}
+Response: {
+    "details": str
+}

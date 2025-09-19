@@ -6,21 +6,33 @@ uv run app/main.py
 ```
 
 ## запуск в Docker
-- 1.перейти в папку
+1. перейти в папку
 ```bash
 cd /GameCenter-FastAPI 
 ```
-- 2.запустить docker-compose.yml
+2. запустить docker-compose.yml
 ```bash
 docker compose up -d 
 ```
-- 3.запустить миграции
+3. запустить миграции
 ```bash
 docker-compose exec web uv run aerich upgrade
 ```
-- 4.создать суперпользователя
+4. создать суперпользователя
 ```bash 
 docker-compose exec web uv run app/create_superuser.py
+```
+5. создать 10 станций
+```bash
+docker-compose exec web uv run app/create_stations.py
+```
+6. создать 10 заданий 
+```bash
+docker-compose exec web uv run app/create_tasks.py
+```
+7. создать 40 кураторов  
+```bash
+docker-compose exec web uv run app/create_users.py
 ```
 
 
