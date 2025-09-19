@@ -34,7 +34,10 @@ docker-compose exec web uv run app/create_tasks.py
 ```bash
 docker-compose exec web uv run app/create_users.py
 ```
+## Документация и Админка
 
+- Документация http://localhost:8000/docs
+- Админка http://localhost:8000/admin
 
 ## Диаграмма Базы данных
 ![alt text](docs/DB.jpg)
