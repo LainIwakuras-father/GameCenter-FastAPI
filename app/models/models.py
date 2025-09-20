@@ -74,7 +74,7 @@ class PlayerTeam(BaseModel):
     user = fields.OneToOneField("models.User", related_name="player_team")
 
     team_name = fields.CharField(max_length=100)
-    start_time = fields.DatetimeField(anull=True)
+    start_time = fields.DatetimeField(null=True)
     score = fields.IntField(default=0, null=True)
 
     # one-to-many foreign key !
