@@ -291,7 +291,8 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "*",
+        "http://app:80",
+        "http://app:8000",
         "http://играцентр.рф:3000",
         "http://играцентр.рф:8000",
         "http://api.играцентр.рф:3000",
