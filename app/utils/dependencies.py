@@ -1,12 +1,16 @@
 from datetime import datetime
-from fastapi import Depends, Request, HTTPException, status
+from fastapi import Depends, Request, HTTPException, status, Cookie
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
 
 from config.logging import app_logger as logger
 from models.models import User, Curator, PlayerTeam
 from utils.auth_utils import decoded_jwt
-from utils.exception import AccessTokenRequired, NoJwtException, RefreshTokenRequired
+from utils.exception import (
+    AccessTokenRequired,
+    NoJwtException,
+    RefreshTokenRequired,
+)
 
 
 # oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/token")
@@ -39,9 +43,11 @@ class TokenBearer(HTTPBearer):
         return token_data
 
     def verify_token_data(self, token_dict):
-        raise NotImplementedError("Please Override this method in child classes")
-    
-    # #проверка срока жизни токена 
+        raise NotImplementedError(
+            "Please Override this method in child classes"
+        )
+
+    # #проверка срока жизни токена
     # async def expire_token(self, token_data: dict):
     #     if token_data["exp"] < datetime.now():
     #         raise HTTPException(
@@ -63,16 +69,23 @@ class RefreshTokenBearer(TokenBearer):
 
 
 async def get_current_auth_user_for_refresh(
-    token_details: HTTPAuthorizationCredentials = Depends(RefreshTokenBearer()),
-) -> User:
+    refresh_token = Cookie(None,alias="users_refresh_token")
+):
     try:
+        if refresh_token is None:
+            raise NoJwtException()
+        else:
+            token_details = decoded_jwt(refresh_token)
+        if token_details["type"] == "access":
+            raise RefreshTokenRequired()
         expiry_timestamp = token_details["exp"]
         # Проверка на истекший токен обновления
         if datetime.fromtimestamp(expiry_timestamp) > datetime.now():
             username = token_details["sub"]
             return username
-    except:
-        raise NoJwtException()
+    except Exception as e:
+        logger.error(f"message: {e}")
+        raise
 
 
 async def IsAuthenticated(

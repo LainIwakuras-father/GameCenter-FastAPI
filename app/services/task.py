@@ -13,9 +13,13 @@ class TaskService:
         return await self.repository.get_by_id(id)
 
     async def create_task(self, task_data: Dict[str, Any]) -> Any:
-        return await self.repository.create(**task_data)  # не забудь про звездочки
+        return await self.repository.create(
+            **task_data
+        )  # не забудь про звездочки
 
-    async def update_task(self, id: int, task_data: Dict[str, Any]) -> Optional[Any]:
+    async def update_task(
+        self, id: int, task_data: Dict[str, Any]
+    ) -> Optional[Any]:
         return await self.repository.update(id, **task_data)
 
     async def delete_task(self, id: int) -> bool:

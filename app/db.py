@@ -30,7 +30,8 @@ DB_CONFIG = {
     "use_tz": False,
     "timezone": "UTC",
 }
- # "generate_schemas": False,
+# "generate_schemas": False,
+
 
 async def init_db():
     """

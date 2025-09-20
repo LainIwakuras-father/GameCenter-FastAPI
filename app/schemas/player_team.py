@@ -4,13 +4,18 @@ from typing import Optional
 
 from schemas.base import BaseSchema
 
+
 class StationOrderNested(BaseSchema):
     id: int
 
+
 class StationNested(BaseSchema):
     id: int
+
+
 class ScoreAdd(BaseSchema):
     score: int
+
 
 class ScoreResponse(BaseSchema):
     score: int
@@ -18,10 +23,12 @@ class ScoreResponse(BaseSchema):
 
 
 class CurrentStation(BaseSchema):
-    current_station: int 
+    current_station: int
+
 
 class CurrentStationResponse(BaseSchema):
-    current_station: str 
+    current_station: str
+
 
 class PlayerTeam(BaseSchema):
     id: Optional[int] = None
@@ -31,7 +38,6 @@ class PlayerTeam(BaseSchema):
     user: int
     stations: Optional[StationOrderNested] = None
     current_station: Optional[StationNested] = None
-    
 
 
 class PlayerTeamCreate(PlayerTeam):
@@ -40,11 +46,6 @@ class PlayerTeamCreate(PlayerTeam):
 
 class PlayerTeamUpdate(PlayerTeam):
     pass
-
-
-
-
-
 
 
 class PlayerTeamWithRelations(PlayerTeam):

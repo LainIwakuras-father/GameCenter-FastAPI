@@ -1,9 +1,5 @@
 from tortoise import fields
 from tortoise.models import Model
-from tortoise.contrib.pydantic import pydantic_model_creator
-
-
-from datetime import timedelta
 
 
 class BaseModel(Model):
@@ -84,7 +80,9 @@ class PlayerTeam(BaseModel):
     # one-to-many foreign key !
     stations = fields.ForeignKeyField("models.StationOrder", null=True)
     # поле с валидацией чтобы не было меньше 1!
-    current_station = fields.IntField(default=1, validators=[MinValueValidator(1)])
+    current_station = fields.IntField(
+        default=1, validators=[MinValueValidator(1)]
+    )
 
     class Meta:
         table = "player_teams"

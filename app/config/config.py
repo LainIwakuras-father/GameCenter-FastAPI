@@ -9,9 +9,9 @@ from fastadmin.settings import Settings as AdminSettings
 # UPLOAD_FOLDER.mkdir(parents=True, exist_ok=True)
 # Загружаем переменные окружения
 ROOT_DIR = Path(__file__).parents[2]
-STATIC_DIR = ROOT_DIR.joinpath('static')
-APP_DIR = ROOT_DIR.joinpath('app')
-ENV_PATH = ROOT_DIR.joinpath('.env')
+STATIC_DIR = ROOT_DIR.joinpath("static")
+APP_DIR = ROOT_DIR.joinpath("app")
+ENV_PATH = ROOT_DIR.joinpath(".env")
 
 load_dotenv(ENV_PATH)
 
@@ -43,7 +43,9 @@ class DBSettings:
 class AUTH_Settings:
     SECRET_KEY: str = os.getenv("SECRET_KEY")
     ALGORITHM: str = os.getenv("ALGORITHM", "HS256")
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", 15))
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = int(
+        os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", 15)
+    )
     REFRESH_TOKEN_EXPIRE_MINUTES: int = int(
         os.getenv("REFRESH_TOKEN_EXPIRE_MINUTES", 1)
     )
@@ -56,18 +58,20 @@ class AUTH_Settings:
             "expire_minutes": self.ACCESS_TOKEN_EXPIRE_MINUTES,
         }
 
+
 # AdminSettings
 class ADMIN_Settings(AdminSettings):
     # class ADMIN_Settings:
     ADMIN_USER_MODEL: str = os.getenv("ADMIN_USER_MODEL", "User")
-    ADMIN_USER_MODEL_USERNAME_FIELD: str = os.getenv("ADMIN_USER_MODEL_USERNAME_FIELD")
+    ADMIN_USER_MODEL_USERNAME_FIELD: str = os.getenv(
+        "ADMIN_USER_MODEL_USERNAME_FIELD"
+    )
     ADMIN_SECRET_KEY: str = os.getenv("ADMIN_SECRET_KEY")
 
 
 db_settings = DBSettings()
 auth_settings = AUTH_Settings()
 admin_settings = ADMIN_Settings()
-
 
 
 # if __name__ == "__main__":

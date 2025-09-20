@@ -22,12 +22,18 @@ class PlayerTeamService:
     async def delete_player_team(self, id: int) -> bool:
         return await self.repository.delete(id=id)
 
-    async def add_score_to_team(self, id: int, score_to_add: int) -> Optional[tuple[int,int]]:
-        score, current_station = await self.repository.add_score(id, score_to_add)
+    async def add_score_to_team(
+        self, id: int, score_to_add: int
+    ) -> Optional[tuple[int, int]]:
+        score, current_station = await self.repository.add_score(
+            id, score_to_add
+        )
         return score, current_station
 
     async def get_top_3_teams(self) -> List[Any]:
         return await self.repository.get_top_3_by_score(limit=3)
 
-    async def set_current_station(self, id: int, station_number: int) -> Optional[str]:
+    async def set_current_station(
+        self, id: int, station_number: int
+    ) -> Optional[str]:
         return await self.repository.set_current_station(id, station_number)

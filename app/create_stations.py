@@ -7,14 +7,15 @@ from models.models import Station
 
 async def create_stations():
     await init_db()
-    
+
     try:
         stations = await Station.all()
-        if not stations and stations ==[]:
+        if not stations and stations == []:
             new_stations = []
-            new_stations.append(Station(
-                name="пл.Искусств",
-                description="""
+            new_stations.append(
+                Station(
+                    name="пл.Искусств",
+                    description="""
                 Площадь Искусств располагается перед Михайловским 
                 дворцом в Центральном районе города. Площадь  называется 
                 именно так потому, что все здания, расположенные здесь,
@@ -25,12 +26,14 @@ async def create_stations():
                 им. Шостаковича.
 
                 """,
-                image="static/image/PlISKYSSTV.png",
-                assignment="Скотч"
-            ))
-            new_stations.append(Station(
-                name="Спас на Крови",
-                description="""
+                    image="static/image/PlISKYSSTV.png",
+                    assignment="Скотч",
+                )
+            )
+            new_stations.append(
+                Station(
+                    name="Спас на Крови",
+                    description="""
                 Храм Спаса на Крови — это православный мемориальный храм,
                 сооружённый в память об убийстве императора Александра II,
                 которое произошло на этом месте 1 марта 1881 года. 
@@ -41,12 +44,14 @@ async def create_stations():
                 вместимость до 1600 человек.
 
                 """,
-                image="static/image/SPAS_NA_KROVY.png",
-                assignment="Пазл"
-            ))
-            new_stations.append(Station(
-                name="Екатерининский сквер",
-                description="""
+                    image="static/image/SPAS_NA_KROVY.png",
+                    assignment="Пазл",
+                )
+            )
+            new_stations.append(
+                Station(
+                    name="Екатерининский сквер",
+                    description="""
                 Напротив колоритного магазина купцов Елисеевых на Невском проспекте
                 расположен Екатерининский сквер. Это место петербуржцы любовно именуют
                 «Катькин садик». Сквер со всех сторон окружен памятниками архитектуры,
@@ -58,13 +63,14 @@ async def create_stations():
                 известные как князь Потемкин, полководец Суворов, Орлов, 
                 Румянцев, Дашкова и другие. Эти имена выгравированы на пьедестале.
                 """,
-
-                image="static/image/EKATERININSKY_SKVER.png",
-                assignment="Собери слово"
-            ))
-            new_stations.append(Station(
-                name="Казанский собор",
-                description="""
+                    image="static/image/EKATERININSKY_SKVER.png",
+                    assignment="Собери слово",
+                )
+            )
+            new_stations.append(
+                Station(
+                    name="Казанский собор",
+                    description="""
                 Казанский кафедральный собор — одно из крупнейших сооружений
                 Санкт-Петербурга. Собор был построен в 1801-1811 гг. 
                 на месте маленькой и уже обветшавшей церкви Рождества Богородицы. 
@@ -75,13 +81,15 @@ async def create_stations():
                 – чудотворная икона Казанской Божией Матери –
                   была перенесена из церкви-предшественницы.
                 """,
-                image="static/image/KAZANSKIY_SOBOR.png",
-                assignment="Семейный фотоальбом"
-            ))
+                    image="static/image/KAZANSKIY_SOBOR.png",
+                    assignment="Семейный фотоальбом",
+                )
+            )
 
-            new_stations.append(Station(
-                name="Б.Конюшенная",
-                description="""
+            new_stations.append(
+                Station(
+                    name="Б.Конюшенная",
+                    description="""
                 Появление  Большой Конюшенной улицы историки относят к 30-м годам XVIII века.
                 Первоначально Большая Конюшенная  была тесно застроена невысокими деревянными домами,
                 в которых находились различные лавки и ремесленные мастерские.
@@ -90,12 +98,14 @@ async def create_stations():
                 лютеранская церковь апостола Петра. В ХХ веке Большая Конюшенная была
                 переименована в улицу Желябова, но затем «старое» название было возвращено.
                 """,
-                image="static/image/BKONYUSHENNAYA.png",
-                assignment="Мэтч"
-            ))
-            new_stations.append(Station(
-                name="Исаакевский сквер",
-                description="""
+                    image="static/image/BKONYUSHENNAYA.png",
+                    assignment="Мэтч",
+                )
+            )
+            new_stations.append(
+                Station(
+                    name="Исаакевский сквер",
+                    description="""
                 Строительство Исаакиевского собора задумал Петр І,
                 который родился в день памяти преподобного 
                 Исаакия Далматского, и таким образом  решил почтить святого. Строительство собора сфотографировали 
@@ -103,13 +113,15 @@ async def create_stations():
                 было израсходовано 400 кг золота, 500 кг лазурита,
                 тысяча тонн бронзы и 16 тонн малахита.
                 """,
-                image="static/image/ISAKEEVSKIY_SOBOR.png",
-                assignment="Точки опоры"
-            ))
+                    image="static/image/ISAKEEVSKIY_SOBOR.png",
+                    assignment="Точки опоры",
+                )
+            )
 
-            new_stations.append(Station(
-                name="Адмиралтейство",
-                description="""
+            new_stations.append(
+                Station(
+                    name="Адмиралтейство",
+                    description="""
                 5 ноября 1704 года было основано 
                 Адмиралтейство — первая судостроительная 
                 верфь России на Балтийском море. 
@@ -121,13 +133,15 @@ async def create_stations():
                 Санкт-Петербурга, к нему тремя лучами сходились основные городские улицы — Невский проспект, 
                 Гороховая улица и Вознесенский проспект.
                 """,
-                image="static/image/ADMIRALTESTVO.png",
-                assignment="Скульптор и глина"
-            ))
+                    image="static/image/ADMIRALTESTVO.png",
+                    assignment="Скульптор и глина",
+                )
+            )
 
-            new_stations.append(Station(
-                name="РГПУ им. А.И.Герцена",
-                description="""
+            new_stations.append(
+                Station(
+                    name="РГПУ им. А.И.Герцена",
+                    description="""
                 Российский государственный педагогический университет им. А И. Герцена 
                 ведет отсчет своей истории с 13 мая 1797 года. Первое время это был Воспитательный дом.
                 В Воспитательном доме впервые в России решались проблемы охраны детства: 
@@ -136,25 +150,29 @@ async def create_stations():
                 родоначальником практической коррекционной педагогики: открыто опытное училище глухонемых детей
                 – первое стабильное заведение подобного типа. 
                 """,
-                image="static/image/RGPUimGERCENA.png",
-                assignment="Крестики - нолики"
-            ))
+                    image="static/image/RGPUimGERCENA.png",
+                    assignment="Крестики - нолики",
+                )
+            )
 
-            new_stations.append(Station(
-                name="Дворцовая площадь",
-                description="""
+            new_stations.append(
+                Station(
+                    name="Дворцовая площадь",
+                    description="""
                 Дворцовая площадь – это сердце Санкт-Петербурга.
                 Она является одним из самых красивых архитектурных ансамблей мира.
                 Площадь окружена зданием главного штаба, зданием штаба Гвардейского корпуса и Зимним дворцом.
                 В центре площади находится Александровская колонна, 
                 спроектированная в честь победы русской армии над французами в Первой мировой войне.
                 """,
-                image="static/image/DVORCOVAYA_PLOSHAD.png",
-                assignment="Упади конверт"
-            ))
-            new_stations.append(Station(
-                name="Медный всадник",
-                description="""
+                    image="static/image/DVORCOVAYA_PLOSHAD.png",
+                    assignment="Упади конверт",
+                )
+            )
+            new_stations.append(
+                Station(
+                    name="Медный всадник",
+                    description="""
                 Медный всадник – это памятник Петру I, расположенный на Сенатской площади.
                 Скульптор изобразил Петра Великого в виде всадника, облаченного в простые одеяния,
                 который восседает на коне, покрытом вместо седла медвежьей шкурой.
@@ -164,10 +182,10 @@ async def create_stations():
                 говорит о трудностях, которые пришлось преодолеть.
                 Змея, путающаяся под задними ногами коня, изображает врагов, пытающихся помешать двигаться вперед.
                 """,
-                image="static/image/MEDNIY_VSADNIK.png",
-                assignment="Ребус"
-            ))
-
+                    image="static/image/MEDNIY_VSADNIK.png",
+                    assignment="Ребус",
+                )
+            )
 
             await Station.bulk_create(new_stations)
             logger.info("10 Stations created! if not exist")

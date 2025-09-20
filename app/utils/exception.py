@@ -23,7 +23,9 @@ def handle_http_exceptions(func):
 
 class TokenExpiredException(HTTPException):
     def __init__(self):
-        super().__init__(status_code=status.HTTP_401_UNAUTHORIZED, detail="Токен истек")
+        super().__init__(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Токен истек"
+        )
 
 
 class TokenNoFoundException(HTTPException):
@@ -54,7 +56,8 @@ class RefreshTokenRequired(HTTPException):
 
 
 ImageUploadException = HTTPException(
-    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Ошибка загрузки изображения"
+    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+    detail="Ошибка загрузки изображения",
 )
 
 
@@ -67,7 +70,8 @@ PasswordMismatchException = HTTPException(
 )
 
 IncorrectEmailOrPasswordException = HTTPException(
-    status_code=status.HTTP_401_UNAUTHORIZED, detail="Неверная почта или пароль"
+    status_code=status.HTTP_401_UNAUTHORIZED,
+    detail="Неверная почта или пароль",
 )
 
 NoJwtException = HTTPException(
@@ -75,7 +79,8 @@ NoJwtException = HTTPException(
 )
 
 NoUserIdException = HTTPException(
-    status_code=status.HTTP_401_UNAUTHORIZED, detail="Не найден ID пользователя"
+    status_code=status.HTTP_401_UNAUTHORIZED,
+    detail="Не найден ID пользователя",
 )
 
 ForbiddenException = HTTPException(

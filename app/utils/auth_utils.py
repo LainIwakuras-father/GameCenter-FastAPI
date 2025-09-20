@@ -39,7 +39,7 @@ def decoded_jwt(
     try:
         decoded = decode(token, secret_key, algorithm)
         return decoded
-    
+
     except PyJWTError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="Токен невалидный"
@@ -50,7 +50,9 @@ def get_password_hash(password: str | bytes) -> str:
     return pwd_context.hash(password)
 
 
-def verify_password(plain_password: str | bytes, hashed_password: str | bytes) -> bool:
+def verify_password(
+    plain_password: str | bytes, hashed_password: str | bytes
+) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
 
 

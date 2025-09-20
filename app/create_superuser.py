@@ -12,7 +12,9 @@ async def create_superuser():
         user = await User.get_or_none(username="admin")
         if not user:
             await User.create(
-                username="admin", hash_password=hash_password, is_superuser=True
+                username="admin",
+                hash_password=hash_password,
+                is_superuser=True,
             )
             logger.info("SuperUser created! if not exist")
 

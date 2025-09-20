@@ -7,18 +7,21 @@ import os
 import uuid
 
 
-import typing as tp
-
 from fastapi.staticfiles import StaticFiles
 
 from utils.random_station import shuffle_stations
-from utils.exception import ImageUploadException
-from utils.upload_files import convert_base64_to_file, save_upload_media
 from utils.auth_utils import verify_password, get_password_hash
-from models.models import Curator, PlayerTeam, Station, StationOrder, Task, User
+from models.models import (
+    Curator,
+    PlayerTeam,
+    Station,
+    StationOrder,
+    Task,
+    User,
+)
 
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastadmin import fastapi_app as admin_app
 
@@ -37,6 +40,8 @@ from fastadmin import register, WidgetType, TortoiseModelAdmin, action
 НАСТРОЙКА АДМИНКИ КНОПОЧКИ И ОТОБРАЖЕНИЯ
 К моему сожалению, не понимаю почему , но работает только если эта часть кода будет в файле main.py
 """
+
+
 # Админка для Task
 @register(Task)
 class TaskAdmin(TortoiseModelAdmin):
@@ -57,16 +62,17 @@ class UserAdmin(TortoiseModelAdmin):
         "last_name",
         "is_superuser",
         "is_active",
-      
     )
     list_display_links = ("id", "username")
     list_filter = ("id", "username")
     search_fields = ("username", "email", "first_name", "last_name")
 
     formfield_overrides = {  # noqa: RUF012
-        "hash_password": (WidgetType.PasswordInput, {"passwordModalForm": False}),
+        "hash_password": (
+            WidgetType.PasswordInput,
+            {"passwordModalForm": False},
+        ),
     }
-
 
     actions = [
         *TortoiseModelAdmin.actions,
@@ -77,14 +83,18 @@ class UserAdmin(TortoiseModelAdmin):
     async def authenticate(
         self, username: str, password: str
     ) -> uuid.UUID | int | None:
-        user = await self.model_cls.filter(username=username, is_superuser=True).first()
+        user = await self.model_cls.filter(
+            username=username, is_superuser=True
+        ).first()
         if not user:
             return None
         if not verify_password(password.encode(), user.hash_password):
             return None
         return user.id
 
-    async def change_password(self, id: uuid.UUID | int, password: str) -> None:
+    async def change_password(
+        self, id: uuid.UUID | int, password: str
+    ) -> None:
         user = await self.model_cls.filter(id=id).first()
         if not user:
             return
@@ -103,7 +113,15 @@ class UserAdmin(TortoiseModelAdmin):
 # Админка для Station
 @register(Station)
 class StationAdmin(TortoiseModelAdmin):
-    list_display = ["id", "name", "points", "time", "task", "image", "assignment"]
+    list_display = [
+        "id",
+        "name",
+        "points",
+        "time",
+        "task",
+        "image",
+        "assignment",
+    ]
     list_display_links = ["id", "name"]
     search_fields = [
         "name",
@@ -128,7 +146,7 @@ class StationAdmin(TortoiseModelAdmin):
     #         return await super().orm_save_upload_field(obj, field, base64)
     #     try:
     #         decode_file, format_file = await convert_base64_to_file(base64)
-            
+
     #         image_path = await save_upload_media(
     #             file=decode_file,
     #             file_format=format_file
@@ -140,6 +158,7 @@ class StationAdmin(TortoiseModelAdmin):
     #     except Exception as e:
     #         logger.error(f"Error saving {field} to db: {e}")
     #         ImageUploadException()
+
 
 # Админка для StationOrder
 @register(StationOrder)
@@ -155,7 +174,7 @@ class StationOrderAdmin(TortoiseModelAdmin):
         "seventh",
         "eighth",
         "ninth",
-        "tenth",        
+        "tenth",
     ]
     list_filter = [
         "first",
@@ -174,20 +193,23 @@ class StationOrderAdmin(TortoiseModelAdmin):
 # Админка для PlayerTeam
 @register(PlayerTeam)
 class PlayerTeamAdmin(TortoiseModelAdmin):
-    list_display = ["id", "team_name","start_time", "score", "current_station","stations"]
+    list_display = [
+        "id",
+        "team_name",
+        "start_time",
+        "score",
+        "current_station",
+        "stations",
+    ]
     search_fields = ["team_name"]
     list_filter = ["score", "current_station"]
-
 
     formfield_overrides = {  # noqa: RUF012
         "start_time": (WidgetType.DateTimePicker, {"required": False}),
     }
 
+    actions = (*TortoiseModelAdmin.actions, "set_random_stations")
 
-    actions =(
-        *TortoiseModelAdmin.actions,
-        "set_random_stations"
-    )
     @action(description="определить случайные станции команде и сохранить")
     async def set_random_stations(self, ids: list[int]):
         await shuffle_stations(ids)
@@ -196,25 +218,23 @@ class PlayerTeamAdmin(TortoiseModelAdmin):
         #     details=details
         # )
 
-
-
         # """
         # Устанавливает случайный порядок станций для выбранных команд
         # """
         # # Получаем все доступные станции
         # all_stations = await Station.all()
-        
+
         # if len(all_stations) < 10:
         #     raise ValueError("Недостаточно станций для создания маршрута. Нужно как минимум 10 станций.")
-        
+
         # # Получаем выбранные команды
         # teams = await PlayerTeam.filter(id__in=ids).prefetch_related("stations")
-        
+
         # for team in teams:
         #     # Выбираем 10 случайных станций и перемешиваем
         #     random_stations = random.sample(all_stations, 10)
         #     random.shuffle(random_stations)
-            
+
         #     # Создаем новый порядок станций
         #     station_order = await StationOrder.create(
         #         first=random_stations[0],
@@ -228,23 +248,18 @@ class PlayerTeamAdmin(TortoiseModelAdmin):
         #         ninth=random_stations[8],
         #         tenth=random_stations[9],
         #     )
-            
+
         #     # Обновляем команду
         #     team.stations = station_order
         #     team.current_station = random_stations[0]  # Устанавливаем первую станцию как текущую
-            
+
         #     # Сбрасываем прогресс команды
         #     team.score = 0
         #     team.start_time = datetime.now()  # Если у вас есть поле для времени начала
-            
+
         #     await team.save()
-        
+
         # return f"Случайные станции установлены для {len(teams)} команд"
-
-
-
-
-
 
 
 # Админка для Curator
@@ -260,16 +275,20 @@ class CuratorAdmin(TortoiseModelAdmin):
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     try:
         await init_db()
-        #эту часть кода переместить в db.py
+        # эту часть кода переместить в db.py
         logger.info("создаю БД")
         if db_settings.ENVIRONMENT == "development":
             user = await User.get_or_none(username="admin")
             if not user:
                 hash_password = get_password_hash("admin")
-                await User.create(username="admin", hash_password=hash_password, is_superuser=True)
+                await User.create(
+                    username="admin",
+                    hash_password=hash_password,
+                    is_superuser=True,
+                )
                 logger.info("создаю админа если его не было")
-                    # from tortoise import Tortoise
-                    # print(Tortoise.apps)
+                # from tortoise import Tortoise
+                # print(Tortoise.apps)
 
         yield
 

@@ -41,6 +41,8 @@ docker-compose exec web uv run app/create_player_teams.py
 
 # В ПРОЦЕССЕ РАЗРАБОТКИ 
  - bash-скрипт накатать один чтоб эти команды не прописывать для вноса данных В БД
+ - api-tests
+ - СI/CD in github action
  - деплой на https://gamecenter.ru 
 
 ## Документация и Админка

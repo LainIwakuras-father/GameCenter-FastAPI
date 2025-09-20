@@ -1,4 +1,12 @@
-from api.v1 import auth, curator, task, player_team, station, station_order, user
+from api.v1 import (
+    auth,
+    curator,
+    task,
+    player_team,
+    station,
+    station_order,
+    user,
+)
 
 
 from fastapi import APIRouter
