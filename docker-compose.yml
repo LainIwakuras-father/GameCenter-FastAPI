@@ -21,8 +21,8 @@ services:
     command: uv run uvicorn app.main:app --host 0.0.0.0 --port 80
     env_file:
       - .env
-    expose:
-      - 80  # Expose internally for Nginx proxy
+    ports:
+      - 8000:80
     volumes:
       - ./static:/backend/static
     depends_on:
