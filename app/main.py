@@ -291,7 +291,8 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "*"
+        "играцентр.рф:3000",
+        "api.играцентр.рф:3000",
     ],  # замени на список доменов, которые могут обращаться к нашему API
     allow_credentials=True,
     allow_methods=["*"],
