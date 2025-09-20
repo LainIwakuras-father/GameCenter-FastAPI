@@ -63,7 +63,7 @@ class Curator(BaseModel):
         table = "curators"
 
     def __str__(self):
-        return self.name
+        return self.name, self.id
 
 
 from tortoise.validators import MinValueValidator
@@ -88,7 +88,7 @@ class PlayerTeam(BaseModel):
         table = "player_teams"
 
     def __str__(self):
-        return self.team_name
+        return self.team_name, self.id
 
 
 class StationOrder(BaseModel):
@@ -145,7 +145,7 @@ class Station(BaseModel):
         table = "stations"
 
     def __str__(self):
-        return self.name
+        return self.name, self.id
 
 
 class Task(BaseModel):
