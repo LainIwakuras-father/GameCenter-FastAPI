@@ -74,7 +74,7 @@ auth_settings = AUTH_Settings()
 admin_settings = ADMIN_Settings()
 
 
-# if __name__ == "__main__":
-#     print(ROOT_DIR)
-#     print(APP_DIR)
-#     print(ENV_FILE_PATH)
+if __name__ == "__main__":
+    print(ROOT_DIR)
+    print(APP_DIR)
+    print(ENV_PATH)
