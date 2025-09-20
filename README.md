@@ -39,6 +39,10 @@ docker-compose exec web uv run app/create_curators.py
 docker-compose exec web uv run app/create_player_teams.py
 ```
 
+9. 
+```bash
+docker-compose exec web uv run app/drop_tables.py
+```
 # В ПРОЦЕССЕ РАЗРАБОТКИ 
  - bash-скрипт накатать один чтоб эти команды не прописывать для вноса данных В БД
  - api-tests
