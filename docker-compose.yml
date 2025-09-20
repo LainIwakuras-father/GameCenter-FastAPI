@@ -16,11 +16,11 @@ services:
       networks:
         - network
 
-
+# uv run uvicorn app.main:app --host 0.0.0.0 --port 80 
   web:
         container_name: app_gamecenter
         build: .
-        command: uv run uvicorn app.main:app --host 0.0.0.0 --port 80
+        command: uv run gunicorn -w 5 -k uvicorn.workers.UvicornWorker -b 0.0.0.0:80 app.main:app
         env_file:
           - .env
         ports:

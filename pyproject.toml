@@ -11,6 +11,7 @@ dependencies = [
     "bcrypt==4.0.1",
     "fastadmin[fastapi,tortoise-orm]>=0.2.22",
     "fastapi>=0.116.1",
+    "gunicorn>=23.0.0",
     "loguru>=0.7.3",
     "passlib==1.7.4",
     "pyjwt>=2.10.1",
