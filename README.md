@@ -34,12 +34,15 @@ docker-compose exec web uv run app/create_tasks.py
 ```bash
 docker-compose exec web uv run app/create_curators.py
 ```
-8. cоздать 10 капитанов 
+8. создать пути для капитанов
+```bash
+docker-compose exec web uv run app/create_station_order.py
+```
+9. cоздать 27 капитанов 
 ```bash
 docker-compose exec web uv run app/create_player_teams.py
 ```
-
-9. 
+10. 
 ```bash
 docker-compose exec web uv run app/drop_tables.py
 ```

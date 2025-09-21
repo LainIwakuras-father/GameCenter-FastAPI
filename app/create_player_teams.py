@@ -5,7 +5,7 @@ from utils.generate_password import generate_random_password
 from utils.auth_utils import get_password_hash
 from db import init_db, close_db
 from config.logging import app_logger as logger
-from models.models import User, PlayerTeam
+from models.models import StationOrder, User, PlayerTeam
 
 teams_list = [
     {"name": "Веселые фермеры"},
@@ -27,7 +27,6 @@ teams_list = [
     {"name": "Неизвестные"},
     {"name": "ФавориТьфу"},
     {"name": "Это сложно"},
-    {"name": "Дивергенты"},
     {"name": "Команда"},
     {"name": "Бесы"},
     {"name": "ЛСШ ТИМ"},
@@ -45,6 +44,7 @@ async def create_player_teams():
     # hash_password = get_password_hash("admin")
     try:
         users = await User.all()
+        orders = StationOrder.all()
         if len(users) == 11:
             new_users = []
             new_password = []
@@ -68,9 +68,12 @@ async def create_player_teams():
                 из пользователей делаю капитанов
                             
                 """
+                
+                
                 player= PlayerTeam(
                       user=user,
                       team_name=teamname["name"],
+                      stations=await StationOrder.get(id=i)
                 )
                 await player.save()
         logger.info("10 player teams created! if not exist")
