@@ -57,7 +57,7 @@ async def add_score_to_player_team(id: int, score: ScoreAdd):
     return ScoreResponse(score=score_add, current_station=current_station)
 
 
-@router.get("/api/playerteam/get_top_3/", response_model=List[PlayerTeam])
+@router.get("/api/playerteam/get_top_3/")
 async def get_top_3_player_teams():
     return await player_team_service.get_top_3_teams()
 
