@@ -315,7 +315,7 @@ app.add_middleware(
         "http://app:80",
         "http://xn--80afhj2apdp7a.xn--p1ai:3000",
         "http://app:8000",
-        "http://играцентр.рф"
+        "http://играцентр.рф",
         "http://играцентр.рф:3000",
         "http://играцентр.рф:8000",
         "http://api.играцентр.рф",
