@@ -31,7 +31,8 @@ class PlayerTeamService:
         return score, current_station
 
     async def get_top_3_teams(self) -> List[Any]:
-        return await self.repository.get_top_3_by_score(limit=3)
+        limit=3
+        return await self.repository.get_top_3_by_score(limit)
 
     async def set_current_station(
         self, id: int, station_number: int

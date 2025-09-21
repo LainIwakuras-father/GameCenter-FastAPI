@@ -32,11 +32,11 @@ class PlayerTeamRepository(BaseRepository):
             return instance.score, instance.current_station
         return None
 
-    async def get_top_3_by_score(self) -> List[PlayerTeam]:
+    async def get_top_3_by_score(self,limit:int) -> List[PlayerTeam]:
         return (
             await PlayerTeam.all()
             .order_by("-score")
-            .limit(3)
+            .limit(limit)
             .prefetch_related("user")
         )
 

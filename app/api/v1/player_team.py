@@ -68,6 +68,6 @@ async def get_top_3_player_teams():
 )
 async def set_current_station(id: int, station_number: CurrentStation):
     current_station = await player_team_service.set_current_station(
-        id=id, station_number=station_number
+        id=id, station_number=station_number.model_dump()["current_station"]
     )
     return CurrentStationResponse(current_station=current_station)
