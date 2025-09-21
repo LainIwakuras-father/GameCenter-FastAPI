@@ -46,6 +46,6 @@ class PlayerTeamRepository(BaseRepository):
         team = await PlayerTeam.get_or_none(id=id)
         station = await Station.get_or_none(id=station_number)
         if team and station:
-            team.update_from_dict({"current_station": station_number}).save()
+           await team.update_from_dict({"current_station": station_number}).save()
 
         return station.name

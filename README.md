@@ -38,7 +38,7 @@ docker-compose exec web uv run app/create_curators.py
 ```bash
 docker-compose exec web uv run app/create_station_order.py
 ```
-9. cоздать 27 капитанов 
+9. cоздать 26 капитанов 
 ```bash
 docker-compose exec web uv run app/create_player_teams.py
 ```
